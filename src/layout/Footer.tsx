@@ -28,7 +28,7 @@ export default function Footer() {
       className={`${fits ? 'sticky bottom-0' : 'relative'} overflow-hidden border-t border-white/5 bg-[#120f0c] text-[#efe8da]`}
     >
       <div className="mx-auto max-w-6xl px-6 pt-24 sm:px-10">
-        <div className="grid gap-x-20 gap-y-12 md:grid-cols-[1fr_auto_auto_auto]">
+        <div className="grid gap-x-20 gap-y-12 md:grid-cols-[1fr_auto_auto]">
           <Link
             to="/"
             viewTransition

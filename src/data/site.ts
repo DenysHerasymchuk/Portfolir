@@ -10,26 +10,17 @@ export const NAV_LINKS = [
   { to: '/work', label: 'Work' },
   { to: '/about', label: 'About' },
   { to: '/stack', label: 'Stack' },
-  { to: '/writing', label: 'Writing' },
   { to: '/contact', label: 'Contact' },
 ];
 
 export const FOOTER_COLUMNS = [
   {
-    title: 'Work',
+    title: 'Site',
     links: [
-      { to: '/work', label: 'Projects' },
-      { to: '/work/case-studies', label: 'Case studies' },
-      { to: '/work/open-source', label: 'Open source' },
-    ],
-  },
-  {
-    title: 'About',
-    links: [
-      { to: '/about', label: 'About me' },
+      { to: '/work', label: 'Work' },
+      { to: '/about', label: 'About' },
       { to: '/stack', label: 'Stack' },
-      { to: '/writing', label: 'Writing' },
-      { to: '/resume', label: 'Résumé' },
+      { to: '/contact', label: 'Contact' },
     ],
   },
   {
