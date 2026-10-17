@@ -3,20 +3,61 @@ import Credentials from '../components/Credentials';
 import { PrimaryButton } from '../components/PrimaryButton';
 import ScrollVelocity from '../components/ScrollVelocity';
 
+// Line icon in a soft tile; paths use a 24x24 grid and the arrow icon's stroke style.
+function Icon({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-ink/[0.06] text-ink">
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 24 24"
+        className="h-5 w-5"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        {children}
+      </svg>
+    </span>
+  );
+}
+
 const HOW_I_WORK = [
   {
+    icon: (
+      <>
+        <rect x="3" y="3" width="7" height="5" rx="1.5" />
+        <rect x="14" y="3" width="7" height="5" rx="1.5" />
+        <rect x="8.5" y="16" width="7" height="5" rx="1.5" />
+        <path d="M6.5 8v3.5h11V8M12 11.5V16" />
+      </>
+    ),
     title: 'I draw the system before I write it',
     body: 'Boxes and arrows first. If I cannot explain where the data goes and what happens when a piece fails, I am not ready to write code yet.',
   },
   {
+    icon: (
+      <>
+        <circle cx="12" cy="12" r="3.5" />
+        <path d="M3 12h5.5M15.5 12H21" />
+      </>
+    ),
     title: 'I ship small and often',
     body: 'A rough version in front of people beats a perfect one on my laptop. I keep pull requests small so they are easy to review and easy to undo.',
   },
   {
+    icon: <path d="M4 20V10M10 20V4M16 20v-7M21 20H3" />,
     title: 'I measure before I optimise',
     body: 'Load tests and dashboards tell me where the time goes. Guessing usually points at the wrong place.',
   },
   {
+    icon: (
+      <>
+        <circle cx="10.5" cy="10.5" r="6" />
+        <path d="m15 15 5.5 5.5M8 10.5h5" />
+      </>
+    ),
     title: 'I sweat the small details',
     body: 'Empty states, error messages, focus rings, a loading state that does not jump. People notice when they are missing.',
   },
@@ -47,7 +88,13 @@ export default function About() {
             </p>
           </div>
           <aside className="h-fit rounded-3xl border border-ink/10 bg-ink/[0.03] p-8">
-            <h2 className="text-lg font-semibold">What I&apos;m looking for</h2>
+            <div className="flex items-center gap-4">
+              <Icon>
+                <rect x="3" y="7" width="18" height="13" rx="2" />
+                <path d="M8.5 7V5a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v2M3 13h18" />
+              </Icon>
+              <h2 className="text-lg font-semibold">What I&apos;m looking for</h2>
+            </div>
             <p className="mt-3 leading-relaxed text-ink/80">
               A junior full-stack or frontend role on a team that ships often and reviews code properly. I learn fastest
               next to people who are better than me, and I&apos;m happy to start with the unglamorous tickets.
@@ -75,9 +122,12 @@ export default function About() {
         <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">How I work</h2>
         <div className="mt-10 grid gap-x-12 gap-y-10 md:grid-cols-2">
           {HOW_I_WORK.map(item => (
-            <div key={item.title} className="border-t border-ink/15 pt-6">
-              <h3 className="text-xl font-semibold">{item.title}</h3>
-              <p className="mt-3 leading-relaxed text-ink/75">{item.body}</p>
+            <div key={item.title} className="flex gap-5 border-t border-ink/15 pt-6">
+              <Icon>{item.icon}</Icon>
+              <div>
+                <h3 className="text-xl font-semibold">{item.title}</h3>
+                <p className="mt-3 leading-relaxed text-ink/75">{item.body}</p>
+              </div>
             </div>
           ))}
         </div>
