@@ -227,25 +227,3 @@ body {
     animation: none;
   }
 }
-
-/* Landing logo band: loops over a doubled list, pauses on hover. */
-.logo-loop-track {
-  animation: logo-loop 40s linear infinite;
-}
-
-.logo-loop:hover .logo-loop-track,
-.logo-loop:focus-visible .logo-loop-track {
-  animation-play-state: paused;
-}
-
-@keyframes logo-loop {
-  to {
-    transform: translateX(-50%);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .logo-loop-track {
-    animation: none;
-  }
-}

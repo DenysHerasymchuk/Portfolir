@@ -19,7 +19,7 @@ function ScrollCue() {
 
   const go = () => {
     const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-    document.getElementById('selected-work')?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' });
+    document.getElementById('about')?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' });
   };
 
   return (
@@ -34,7 +34,7 @@ function ScrollCue() {
         tabIndex={atTop ? undefined : -1}
         className="flex flex-col items-center gap-2 rounded-full px-4 py-2 text-sm text-haze transition-colors hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-haze"
       >
-        Selected work
+        More about me
         <svg
           aria-hidden="true"
           viewBox="0 0 16 16"
