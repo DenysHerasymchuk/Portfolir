@@ -1,4 +1,5 @@
 import { useOutletContext } from 'react-router';
+import Credentials from '../components/Credentials';
 import { PrimaryButton } from '../components/PrimaryButton';
 import ScrollVelocity from '../components/ScrollVelocity';
 
@@ -80,6 +81,11 @@ export default function About() {
             </div>
           ))}
         </div>
+      </section>
+
+      <section className="mx-auto mt-32 max-w-6xl px-6 sm:px-10">
+        <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">Studies</h2>
+        <Credentials className="mt-10" />
       </section>
     </div>
   );
