@@ -201,3 +201,29 @@ body {
     animation: none !important;
   }
 }
+
+/* Stack page orbit: rings turn slowly and pause while a logo is hovered or focused. */
+.orbit-ring {
+  animation: orbit-spin 60s linear infinite;
+}
+
+.orbit-reverse {
+  animation-direction: reverse;
+}
+
+.orbit:hover .orbit-ring,
+.orbit:focus-within .orbit-ring {
+  animation-play-state: paused;
+}
+
+@keyframes orbit-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orbit-ring {
+    animation: none;
+  }
+}
