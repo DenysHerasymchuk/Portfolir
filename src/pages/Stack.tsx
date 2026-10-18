@@ -17,7 +17,10 @@ export default function Stack() {
 
       <div className="mt-20 grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
         {STACK_GROUPS.map(group => (
-          <div key={group.name} className="group/area border-t border-ink/15 pt-6">
+          <div
+            key={group.name}
+            className={`group/area border-t border-ink/15 pt-6 ${'wide' in group ? 'sm:col-span-2 lg:col-span-3' : ''}`}
+          >
             <h2 className="text-xl font-semibold">
               {'alias' in group ? (
                 // Both titles stacked in a one-line window; hovering the group rolls the alias up into view.
@@ -33,7 +36,11 @@ export default function Stack() {
                 group.name
               )}
             </h2>
-            <ul className="mt-5 space-y-3">
+            <ul
+              className={
+                'wide' in group ? 'mt-5 grid gap-x-10 gap-y-3 sm:grid-cols-2 lg:grid-cols-3' : 'mt-5 space-y-3'
+              }
+            >
               {group.items.map(item => {
                 const count = usedIn(item).length;
                 return (

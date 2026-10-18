@@ -118,9 +118,10 @@ export const STACK_GROUPS = [
   { name: 'Infrastructure', items: ['Docker', 'Kubernetes', 'Linux', 'Caddy', 'Prometheus', 'Grafana'] },
   { name: 'Tools', items: ['Git', 'Bash', 'Figma', 'Playwright'] },
   { name: 'AI Coding', items: ['Claude Code', 'Subagents', 'Skills', 'MCP'] },
-  // Swaps its title for `alias` on hover.
+  // Swaps its title for `alias` on hover; `wide` spans the full row with items three across.
   {
     name: 'Bonus',
+    wide: true,
     alias: 'Goes without saying',
     items: ['HTML', 'CSS', 'JavaScript', 'C#', 'PHP', 'GitHub', 'GitLab'],
   },
