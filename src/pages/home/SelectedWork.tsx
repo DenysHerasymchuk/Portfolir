@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import { ArrowIcon } from '../../components/PrimaryButton';
 import ProjectImage from '../../components/ProjectImage';
 import TechChip from '../../components/TechChip';
+import { onStack } from '../../data/tech';
 import { PROJECTS } from '../../data/projects';
 
 const FEATURED = PROJECTS.slice(0, 3);
@@ -81,6 +82,7 @@ export default function SelectedWork() {
                 <ul className="mt-6 flex flex-wrap gap-2">
                   {project.stack
                     .flatMap(group => group.items)
+                    .filter(onStack)
                     .slice(0, 5)
                     .map(item => (
                       <li key={item}>

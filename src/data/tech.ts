@@ -102,6 +102,9 @@ export const STACK_GROUPS = [
   { name: 'Bonus', alias: 'Goes without saying', items: ['HTML', 'CSS', 'JavaScript', 'C#', 'PHP'] },
 ];
 
+const ON_STACK = new Set(STACK_GROUPS.flatMap(g => g.items));
+export const onStack = (name: string) => ON_STACK.has(ALIASES[name] ?? name);
+
 // The hero's two tiles, alternating through every listed tool that has a logo.
 const withLogo = STACK_GROUPS.flatMap(g => g.items).flatMap(name => techLogo(name) ?? []);
 export const TILE_SETS: Tech[][] = [withLogo.filter((_, i) => i % 2 === 0), withLogo.filter((_, i) => i % 2 === 1)];

@@ -96,7 +96,7 @@ export default function About() {
           withIcons
         />
         <ScrollVelocity
-          items={['Docker', 'Kubernetes', 'WebSockets', 'WebRTC', 'Kafka', 'ClickHouse', 'Tailwind']}
+          items={['Docker', 'Kubernetes', 'Kafka', 'MySQL', 'Laravel', '.NET', 'Tailwind']}
           speed={50}
           reverse
           withIcons
