@@ -4,6 +4,7 @@ import caddy from '../assets/stack/caddy.svg';
 import celery from '../assets/stack/celery.svg';
 import clickhouse from '../assets/stack/clickhouse.svg';
 import css from '../assets/stack/css.svg';
+import dotnet from '../assets/stack/dotnet.svg';
 import d3 from '../assets/stack/d3.svg';
 import fastapi from '../assets/stack/fastapi.svg';
 import ffmpeg from '../assets/stack/ffmpeg.svg';
@@ -56,6 +57,7 @@ const EXTRA: Record<string, { icon: string; hex: string; color?: boolean }> = {
   HTML: { icon: html, hex: '#E34F26' },
   CSS: { icon: css, hex: '#663399' },
   JavaScript: { icon: javascript, hex: '#F7DF1E' },
+  '.NET': { icon: dotnet, hex: '#512BD4' },
   Laravel: { icon: laravel, hex: '#FF2D20' },
   'Claude Code': { icon: claude, hex: '#D97757' },
   Helm: { icon: helm, hex: '#0F1689' },
@@ -89,7 +91,7 @@ export const techLogo = (name: string): Tech | undefined => BY_NAME[ALIASES[name
 // Everything on the Stack page, grouped. Also feeds the hero tiles and the footer's falling logos.
 export const STACK_GROUPS = [
   { name: 'Frontend', items: ['TypeScript', 'React', 'Angular', 'Tailwind CSS'] },
-  { name: 'Backend', items: ['Go', 'Node.js', 'Python', 'PHP'] },
+  { name: 'Backend', items: ['Go', 'Node.js', 'Python', 'PHP', '.NET'] },
   { name: 'Data', items: ['PostgreSQL', 'MySQL', 'SQLite', 'MongoDB', 'Redis', 'Kafka'] },
   { name: 'Infrastructure', items: ['Docker', 'Kubernetes', 'Linux', 'Caddy', 'Prometheus', 'Grafana'] },
   { name: 'Tools', items: ['Git', 'Figma', 'Playwright'] },
@@ -127,6 +129,7 @@ const URLS: Record<string, string> = {
   CSS: 'https://developer.mozilla.org/docs/Web/CSS',
   JavaScript: 'https://developer.mozilla.org/docs/Web/JavaScript',
   Laravel: 'https://laravel.com',
+  '.NET': 'https://dotnet.microsoft.com',
   MySQL: 'https://www.mysql.com',
   SQLite: 'https://sqlite.org',
   MongoDB: 'https://www.mongodb.com',
