@@ -15,7 +15,7 @@ const HOW_I_WORK = [
       </>
     ),
     title: 'I draw the system before I write it',
-    body: 'I model a project in StarUML before any code: a use case diagram for what people can do, a class diagram for the structure, and sequence diagrams for how the parts talk at runtime. I rank features with MoSCoW, write the main flows out step by step, and settle close calls with a weighted decision matrix.',
+    body: 'I model a project in StarUML before any code: a use case diagram for what people can do, a class diagram for the structure, and sequence diagrams for how the parts talk at runtime.\nI rank features with MoSCoW, write the main flows out step by step, and settle close calls with a weighted decision matrix.',
   },
   {
     icon: (
@@ -25,7 +25,7 @@ const HOW_I_WORK = [
       </>
     ),
     title: 'I ship small and often',
-    body: 'I prototype screens in Figma, prepare images in Photoshop, and click through the flow before building it. The first release is an MVP with only the must-haves, so people can try it early. Pull requests stay small, which makes them easy to review and easy to undo.',
+    body: 'I prototype screens in Figma, prepare images in Photoshop, and click through the flow before building it.\nThe first release is an MVP with only the must-haves, so people can try it early.\nPull requests stay small, which makes them easy to review and easy to undo.',
   },
   {
     icon: <path d="M4 20V10M10 20V4M16 20v-7M21 20H3" />,
@@ -112,7 +112,7 @@ export default function About() {
               <Icon>{item.icon}</Icon>
               <div>
                 <h3 className="text-xl font-semibold">{item.title}</h3>
-                <p className="mt-3 leading-relaxed text-ink/75">{item.body}</p>
+                <p className="mt-3 whitespace-pre-line leading-relaxed text-ink/75">{item.body}</p>
               </div>
             </div>
           ))}
