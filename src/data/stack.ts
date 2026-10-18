@@ -11,7 +11,8 @@ import react from '../assets/stack/react.svg';
 import tailwind from '../assets/stack/tailwindcss.svg';
 import typescript from '../assets/stack/typescript.svg';
 
-export type Tech = { name: string; icon: string; bg: string; fg: string };
+// `color` logos are drawn as-is (multi-colour artwork) instead of tinted with `fg`.
+export type Tech = { name: string; icon: string; bg: string; fg: string; color?: boolean };
 
 // One group per headline tile. Logos from Simple Icons (CC0).
 export const STACK: Tech[][] = [

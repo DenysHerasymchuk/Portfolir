@@ -38,7 +38,9 @@ export default function TechIcon({
       className={`grid shrink-0 place-items-center rounded-lg shadow-[0_2px_6px_rgb(92_74_54/0.2)] ${className}`}
       style={{ background: tech?.bg ?? 'rgb(var(--ink) / 0.1)' }}
     >
-      {tech ? (
+      {tech?.color ? (
+        <img src={tech.icon} alt="" className="h-[70%] w-[70%] object-contain" />
+      ) : tech ? (
         <span
           className="h-[58%] w-[58%]"
           style={{
