@@ -119,7 +119,11 @@ export const STACK_GROUPS = [
   { name: 'Tools', items: ['Git', 'Bash', 'Figma', 'Playwright'] },
   { name: 'AI Coding', items: ['Claude Code', 'Subagents', 'Skills', 'MCP'] },
   // Swaps its title for `alias` on hover.
-  { name: 'Bonus', alias: 'Goes without saying', items: ['HTML', 'CSS', 'JavaScript', 'C#', 'PHP', 'GitHub', 'GitLab'] },
+  {
+    name: 'Bonus',
+    alias: 'Goes without saying',
+    items: ['HTML', 'CSS', 'JavaScript', 'C#', 'PHP', 'GitHub', 'GitLab'],
+  },
 ];
 
 const ON_STACK = new Set(STACK_GROUPS.flatMap(g => g.items));
