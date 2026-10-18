@@ -78,8 +78,8 @@ export default function About() {
             </p>
             <p>
               Most of what I build involves something happening in real time: chat, live video, collaborative editing,
-              dashboards that update every second. I enjoy the parts that are hard to get right, like keeping data in sync
-              between users or keeping a service up when a piece of it fails.
+              dashboards that update every second. I enjoy the parts that are hard to get right, like keeping data in
+              sync between users or keeping a service up when a piece of it fails.
             </p>
             <p>
               On the frontend I care about how things feel. I use React and TypeScript day to day, and I spend more time
@@ -109,11 +109,16 @@ export default function About() {
       </section>
 
       <section className="mt-32 space-y-4 border-y border-ink/10 py-10 font-craze text-5xl uppercase text-ink/80 sm:text-7xl">
-        <ScrollVelocity items={['React', 'TypeScript', 'Go', 'Node.js', 'Python', 'Postgres', 'Redis']} speed={50} />
+        <ScrollVelocity
+          items={['React', 'TypeScript', 'Go', 'Node.js', 'Python', 'Postgres', 'Redis']}
+          speed={50}
+          withIcons
+        />
         <ScrollVelocity
           items={['Docker', 'Kubernetes', 'WebSockets', 'WebRTC', 'Kafka', 'ClickHouse', 'Tailwind']}
           speed={50}
           reverse
+          withIcons
           className="text-haze"
         />
       </section>

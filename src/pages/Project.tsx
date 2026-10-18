@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router';
 import ArchitectureDiagram from '../components/ArchitectureDiagram';
 import { ArrowIcon } from '../components/PrimaryButton';
 import ProjectImage from '../components/ProjectImage';
+import TechIcon from '../components/TechIcon';
 import { PROJECTS, projectBySlug } from '../data/projects';
 import NotFound from './NotFound';
 
@@ -126,7 +127,11 @@ export default function Project() {
           How the pieces connect. Highlighted boxes are services I wrote; the dots show data moving through the system.
         </p>
         <div className="mt-8 rounded-3xl border border-ink/10 bg-ink/[0.03] p-4 sm:p-8">
-          <ArchitectureDiagram nodes={project.architecture.nodes} edges={project.architecture.edges} hue={project.hue} />
+          <ArchitectureDiagram
+            nodes={project.architecture.nodes}
+            edges={project.architecture.edges}
+            hue={project.hue}
+          />
         </div>
         <div className="mt-12 grid gap-x-12 gap-y-10 md:grid-cols-2">
           {project.architecture.notes.map(note => (
@@ -171,7 +176,11 @@ export default function Project() {
               <dt className="text-sm text-haze">{group.layer}</dt>
               <dd className="mt-3 flex flex-wrap gap-2">
                 {group.items.map(item => (
-                  <span key={item} className="rounded-full border border-ink/15 px-3 py-1 text-sm">
+                  <span
+                    key={item}
+                    className="inline-flex items-center gap-1.5 rounded-full border border-ink/15 px-3 py-1 text-sm"
+                  >
+                    <TechIcon name={item} variant="mono" className="h-3.5 w-3.5" />
                     {item}
                   </span>
                 ))}
@@ -184,16 +193,28 @@ export default function Project() {
       {gallery.length > 0 && (
         <section className="mt-28 grid gap-6 md:grid-cols-2">
           {gallery.map(img => (
-            <ProjectImage key={img.caption} name={project.name} caption={img.caption} hue={project.hue} className="aspect-[4/3]" />
+            <ProjectImage
+              key={img.caption}
+              name={project.name}
+              caption={img.caption}
+              hue={project.hue}
+              className="aspect-[4/3]"
+            />
           ))}
         </section>
       )}
 
       <div className="mt-16 flex flex-wrap gap-3">
-        <span className="cursor-not-allowed rounded-full border border-ink/15 px-5 py-2.5 text-ink/50" title="Coming soon">
+        <span
+          className="cursor-not-allowed rounded-full border border-ink/15 px-5 py-2.5 text-ink/50"
+          title="Coming soon"
+        >
           Live demo (coming soon)
         </span>
-        <span className="cursor-not-allowed rounded-full border border-ink/15 px-5 py-2.5 text-ink/50" title="Coming soon">
+        <span
+          className="cursor-not-allowed rounded-full border border-ink/15 px-5 py-2.5 text-ink/50"
+          title="Coming soon"
+        >
           Source code (coming soon)
         </span>
       </div>

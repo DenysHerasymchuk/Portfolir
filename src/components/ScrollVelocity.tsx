@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import TechIcon from './TechIcon';
 
 // A row of text that drifts sideways forever and speeds up while the page is being scrolled.
 // Inspired by React Bits' ScrollVelocity. Static under reduced motion.
@@ -6,9 +7,11 @@ export default function ScrollVelocity({
   items,
   speed = 40, // px per second at rest
   reverse = false,
+  withIcons = false,
   className = '',
 }: {
   items: string[];
+  withIcons?: boolean; // show each item's tech logo before it
   speed?: number;
   reverse?: boolean;
   className?: string;
@@ -56,7 +59,10 @@ export default function ScrollVelocity({
       <div ref={track} className="flex w-max gap-10 whitespace-nowrap will-change-transform">
         {row.map((item, i) => (
           <span key={i} className="flex items-center gap-10">
-            {item}
+            <span className="flex items-center gap-[0.3em]">
+              {withIcons && <TechIcon name={item} variant="mono" className="h-[0.75em] w-[0.75em]" />}
+              {item}
+            </span>
             <span className="inline-block h-[0.18em] w-[0.18em] rounded-full bg-current opacity-40" />
           </span>
         ))}

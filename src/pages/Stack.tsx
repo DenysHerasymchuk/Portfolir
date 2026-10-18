@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
+import TechIcon from '../components/TechIcon';
 import { PROJECTS } from '../data/projects';
 import { STACK, type Tech } from '../data/stack';
 
@@ -53,7 +54,10 @@ function Orbit() {
   );
 
   return (
-    <div className="orbit relative mx-auto aspect-square w-[78%] max-w-[560px] sm:w-full" onMouseLeave={() => setSelected(null)}>
+    <div
+      className="orbit relative mx-auto aspect-square w-[78%] max-w-[560px] sm:w-full"
+      onMouseLeave={() => setSelected(null)}
+    >
       <div className="absolute inset-[18%] rounded-full border border-dashed border-ink/15" />
       <div className="absolute inset-[2%] rounded-full border border-dashed border-ink/10" />
       {ring(inner, 32, false)}
@@ -93,8 +97,8 @@ export default function Stack() {
         <header>
           <h1 className="font-display text-7xl leading-none sm:text-8xl">Stack</h1>
           <p className="mt-6 max-w-md text-lg leading-relaxed text-ink/75 sm:text-xl">
-            The tools I reach for, and the projects where I used them. I pick boring, well-documented tech by default and
-            something newer when the problem needs it.
+            The tools I reach for, and the projects where I used them. I pick boring, well-documented tech by default
+            and something newer when the problem needs it.
           </p>
         </header>
         <Orbit />
@@ -108,8 +112,11 @@ export default function Stack() {
               {group.items.map(item => {
                 const count = usedIn(item).length;
                 return (
-                  <li key={item} className="flex items-baseline justify-between gap-4">
-                    <span>{item}</span>
+                  <li key={item} className="flex items-center justify-between gap-4">
+                    <span className="flex items-center gap-3">
+                      <TechIcon name={item} />
+                      {item}
+                    </span>
                     {count > 0 && (
                       <span className="text-sm text-haze">
                         {count} {count === 1 ? 'project' : 'projects'}

@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { Link } from 'react-router';
 import { ArrowIcon } from '../../components/PrimaryButton';
 import ProjectImage from '../../components/ProjectImage';
+import TechIcon from '../../components/TechIcon';
 import { PROJECTS } from '../../data/projects';
 
 const FEATURED = PROJECTS.slice(0, 3);
@@ -77,7 +78,11 @@ export default function SelectedWork() {
                     .flatMap(group => group.items)
                     .slice(0, 5)
                     .map(item => (
-                      <li key={item} className="rounded-full border border-ink/15 px-3 py-1 text-sm text-ink/80">
+                      <li
+                        key={item}
+                        className="inline-flex items-center gap-1.5 rounded-full border border-ink/15 px-3 py-1 text-sm text-ink/80"
+                      >
+                        <TechIcon name={item} variant="mono" className="h-3.5 w-3.5" />
                         {item}
                       </li>
                     ))}

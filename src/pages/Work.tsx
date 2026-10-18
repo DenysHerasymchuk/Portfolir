@@ -1,5 +1,6 @@
 import { Link } from 'react-router';
 import ArchitectureDiagram from '../components/ArchitectureDiagram';
+import TechIcon from '../components/TechIcon';
 import { ArrowIcon } from '../components/PrimaryButton';
 import TiltCard from '../components/TiltCard';
 import { PROJECTS } from '../data/projects';
@@ -36,7 +37,11 @@ export default function Work() {
                       .flatMap(group => group.items)
                       .slice(0, 6)
                       .map(item => (
-                        <li key={item} className="rounded-full border border-ink/15 px-3 py-1 text-sm text-ink/80">
+                        <li
+                          key={item}
+                          className="inline-flex items-center gap-1.5 rounded-full border border-ink/15 px-3 py-1 text-sm text-ink/80"
+                        >
+                          <TechIcon name={item} variant="mono" className="h-3.5 w-3.5" />
                           {item}
                         </li>
                       ))}
