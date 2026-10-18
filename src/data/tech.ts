@@ -1,3 +1,4 @@
+import claude from '../assets/stack/claude.svg';
 import caddy from '../assets/stack/caddy.svg';
 import celery from '../assets/stack/celery.svg';
 import clickhouse from '../assets/stack/clickhouse.svg';
@@ -37,6 +38,8 @@ const EXTRA: Record<string, { icon: string; hex: string }> = {
   Celery: { icon: celery, hex: '#37814A' },
   Zod: { icon: zod, hex: '#408AFF' },
   OpenTelemetry: { icon: opentelemetry, hex: '#2F2F2F' },
+  'Claude Code': { icon: claude, hex: '#D97757' },
+  'Agent SDK': { icon: claude, hex: '#D97757' },
   Helm: { icon: helm, hex: '#0F1689' },
   MinIO: { icon: minio, hex: '#C72E49' },
   SQLite: { icon: sqlite, hex: '#003B57' },
@@ -80,6 +83,15 @@ const URLS: Record<string, string> = {
   Go: 'https://go.dev',
   Grafana: 'https://grafana.com',
   Helm: 'https://helm.sh',
+  'Claude Code': 'https://code.claude.com/docs/en/overview',
+  'CLAUDE.md memory': 'https://code.claude.com/docs/en/memory',
+  'Plan mode': 'https://code.claude.com/docs/en/common-workflows',
+  'Context engineering': 'https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents',
+  Subagents: 'https://code.claude.com/docs/en/sub-agents',
+  Skills: 'https://code.claude.com/docs/en/skills',
+  Hooks: 'https://code.claude.com/docs/en/hooks',
+  'MCP servers': 'https://modelcontextprotocol.io',
+  'Agent SDK': 'https://code.claude.com/docs/en/agent-sdk',
   IndexedDB: 'https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API',
   Kafka: 'https://kafka.apache.org',
   Kubernetes: 'https://kubernetes.io',
