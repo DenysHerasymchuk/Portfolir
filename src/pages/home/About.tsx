@@ -24,11 +24,6 @@ export default function About() {
             Applied Sciences in Belgium.
           </p>
           <p>
-            I&apos;m drawn to software where things happen live: a message that lands the moment it&apos;s sent, a
-            dashboard that moves while you watch it. I like working out how those systems hold up when a lot of people use
-            them at once, and then making the screen in front of them feel calm.
-          </p>
-          <p>
             Right now I&apos;m looking for my first junior role on a team that ships often and reviews code with care. I
             learn fastest by building real things, and I&apos;m happy to start with the small tickets.
           </p>
