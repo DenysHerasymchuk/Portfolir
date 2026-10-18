@@ -73,7 +73,7 @@ export default function Layout() {
         </nav>
       </header>
       {/* Opaque and above the footer, which is revealed from underneath it. */}
-      <main className="relative z-10 flex-1 bg-paper">
+      <main className="relative z-10 flex-1 rounded-b-[2.5rem] bg-paper">
         <Outlet context={dark} />
       </main>
       <BackToTop />
