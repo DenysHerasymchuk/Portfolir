@@ -549,25 +549,25 @@ export const PROJECTS: Project[] = [
       'Permissions carry over from the source. If you cannot open a document in Google Drive, Atlas will not use it to answer your question.',
     ],
     responsibilities: [
-      'Built the connectors and the incremental sync jobs as Laravel queue workers.',
-      'Designed the chunking and hybrid ranking, with a small Python service for embeddings.',
+      'Built the connectors and the incremental sync jobs as Python workers.',
+      'Designed the chunking, embedding and hybrid ranking.',
       'Wrote the answer step with citations and a check for unsupported claims.',
-      'Built the Angular chat UI and an evaluation set to measure answer quality.',
+      'Built the React chat UI and an evaluation set to measure answer quality.',
     ],
     stack: [
-      { layer: 'Frontend', items: ['Angular', 'TypeScript', 'Tailwind CSS'] },
-      { layer: 'Backend', items: ['Laravel', 'PHP', 'Python'] },
+      { layer: 'Frontend', items: ['React', 'TypeScript', 'Tailwind CSS'] },
+      { layer: 'Backend', items: ['Python'] },
       { layer: 'Data', items: ['PostgreSQL', 'Redis'] },
       { layer: 'Infra', items: ['Docker', 'Linux', 'Caddy'] },
     ],
     architecture: {
       nodes: [
         { id: 'sources', label: 'Sources', detail: 'Notion, Drive, GitHub', x: 90, y: 140, kind: 'client' },
-        { id: 'sync', label: 'Sync workers', detail: 'Laravel queues', x: 300, y: 140, kind: 'service' },
+        { id: 'sync', label: 'Sync workers', detail: 'Python, Redis queue', x: 300, y: 140, kind: 'service' },
         { id: 'chunk', label: 'Chunk + embed', detail: 'Python', x: 510, y: 140, kind: 'service' },
         { id: 'pg', label: 'Postgres', detail: 'pgvector + full text', x: 720, y: 140, kind: 'store' },
-        { id: 'ui', label: 'Chat UI', detail: 'Angular', x: 90, y: 400, kind: 'client' },
-        { id: 'api', label: 'Query API', detail: 'Laravel', x: 300, y: 400, kind: 'service' },
+        { id: 'ui', label: 'Chat UI', detail: 'React', x: 90, y: 400, kind: 'client' },
+        { id: 'api', label: 'Query API', detail: 'Python', x: 300, y: 400, kind: 'service' },
         { id: 'rank', label: 'Hybrid ranking', detail: 'Full text + vectors', x: 510, y: 400, kind: 'service' },
         { id: 'llm', label: 'Answer', detail: 'LLM with citations', x: 720, y: 400, kind: 'edge' },
       ],
@@ -583,7 +583,7 @@ export const PROJECTS: Project[] = [
       notes: [
         {
           title: 'Sync',
-          body: 'Laravel queue workers, backed by Redis, pull changes from each source on a schedule and through webhooks where available. Only changed documents are processed again, so keeping the index fresh stays cheap.',
+          body: 'Python workers, fed by a Redis queue, pull changes from each source on a schedule and through webhooks where available. Only changed documents are processed again, so keeping the index fresh stays cheap.',
         },
         {
           title: 'Chunking',
