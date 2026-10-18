@@ -5,8 +5,8 @@ import { CREDENTIALS } from '../data/site';
 import { ArrowIcon } from './PrimaryButton';
 import ProjectImage from './ProjectImage';
 
-// Dated timeline of work, team programmes and studies, each linking to the project it produced. The line draws down and the entries fade up in turn
-// the first time the list scrolls into view.
+// Dated timeline of work, team programmes and studies, each with a card for the project it produced.
+// The line draws down and the entries fade up in turn the first time the list scrolls into view.
 export default function Credentials({ className = '' }: { className?: string }) {
   const ref = useRef<HTMLOListElement>(null);
   const [shown, setShown] = useState(false);
