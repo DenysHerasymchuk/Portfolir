@@ -9,6 +9,7 @@ import dotnet from '../assets/stack/dotnet.svg';
 import d3 from '../assets/stack/d3.svg';
 import fastapi from '../assets/stack/fastapi.svg';
 import ffmpeg from '../assets/stack/ffmpeg.svg';
+import gitlab from '../assets/stack/gitlab.svg';
 import gnubash from '../assets/stack/gnubash.svg';
 import github from '../assets/stack/github.svg';
 import grpc from '../assets/stack/grpc.svg';
@@ -70,6 +71,8 @@ const EXTRA: Record<string, { icon: string; hex: string; color?: boolean }> = {
   MySQL: { icon: mysql, hex: '#4479A1' },
   MongoDB: { icon: mongodb, hex: '#47A248' },
   'GitHub Apps API': { icon: github, hex: '#181717' },
+  GitHub: { icon: github, hex: '#181717' },
+  GitLab: { icon: gitlab, hex: '#FC6D26' },
 };
 
 const ALIASES: Record<string, string> = { Postgres: 'PostgreSQL', Tailwind: 'Tailwind CSS' };
@@ -116,7 +119,7 @@ export const STACK_GROUPS = [
   { name: 'Tools', items: ['Git', 'Bash', 'Figma', 'Playwright'] },
   { name: 'AI Coding', items: ['Claude Code', 'Subagents', 'Skills', 'MCP'] },
   // Swaps its title for `alias` on hover.
-  { name: 'Bonus', alias: 'Goes without saying', items: ['HTML', 'CSS', 'JavaScript', 'C#', 'PHP'] },
+  { name: 'Bonus', alias: 'Goes without saying', items: ['HTML', 'CSS', 'JavaScript', 'C#', 'PHP', 'GitHub', 'GitLab'] },
 ];
 
 const ON_STACK = new Set(STACK_GROUPS.flatMap(g => g.items));
@@ -150,6 +153,8 @@ const URLS: Record<string, string> = {
   Firecracker: 'https://firecracker-microvm.github.io',
   Git: 'https://git-scm.com',
   'GitHub Apps API': 'https://docs.github.com/en/apps',
+  GitHub: 'https://github.com',
+  GitLab: 'https://gitlab.com',
   Go: 'https://go.dev',
   Grafana: 'https://grafana.com',
   Helm: 'https://helm.sh',
