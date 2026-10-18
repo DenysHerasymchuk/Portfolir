@@ -9,6 +9,7 @@ import dotnet from '../assets/stack/dotnet.svg';
 import d3 from '../assets/stack/d3.svg';
 import fastapi from '../assets/stack/fastapi.svg';
 import ffmpeg from '../assets/stack/ffmpeg.svg';
+import gnubash from '../assets/stack/gnubash.svg';
 import github from '../assets/stack/github.svg';
 import grpc from '../assets/stack/grpc.svg';
 import grafana from '../assets/stack/grafana.svg';
@@ -58,6 +59,7 @@ const EXTRA: Record<string, { icon: string; hex: string; color?: boolean }> = {
   HTML: { icon: html, hex: '#E34F26' },
   CSS: { icon: css, hex: '#663399' },
   JavaScript: { icon: javascript, hex: '#F7DF1E' },
+  Bash: { icon: gnubash, hex: '#4EAA25' },
   '.NET': { icon: dotnet, hex: '#512BD4' },
   'C#': { icon: csharp, hex: '#239120' }, // Devicon (MIT); Simple Icons has none
   Laravel: { icon: laravel, hex: '#FF2D20' },
@@ -111,7 +113,7 @@ export const STACK_GROUPS = [
   { name: 'Backend', items: ['Go', 'Node.js', 'Python', '.NET', 'Laravel'] },
   { name: 'Data', items: ['PostgreSQL', 'MySQL', 'SQLite', 'MongoDB', 'Redis', 'Kafka'] },
   { name: 'Infrastructure', items: ['Docker', 'Kubernetes', 'Linux', 'Caddy', 'Prometheus', 'Grafana'] },
-  { name: 'Tools', items: ['Git', 'Figma', 'Playwright'] },
+  { name: 'Tools', items: ['Git', 'Bash', 'Figma', 'Playwright'] },
   { name: 'AI Coding', items: ['Claude Code', 'Subagents', 'Skills', 'MCP'] },
   // Swaps its title for `alias` on hover.
   { name: 'Bonus', alias: 'Goes without saying', items: ['HTML', 'CSS', 'JavaScript', 'C#', 'PHP'] },
@@ -157,6 +159,7 @@ const URLS: Record<string, string> = {
   JavaScript: 'https://developer.mozilla.org/docs/Web/JavaScript',
   Laravel: 'https://laravel.com',
   '.NET': 'https://dotnet.microsoft.com',
+  Bash: 'https://www.gnu.org/software/bash/',
   'C#': 'https://learn.microsoft.com/dotnet/csharp',
   MySQL: 'https://www.mysql.com',
   SQLite: 'https://sqlite.org',
