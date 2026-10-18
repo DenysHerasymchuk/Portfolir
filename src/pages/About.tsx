@@ -14,6 +14,8 @@ const HOW_I_WORK_LINKS = [
   'Photoshop',
   'Prometheus',
   'Grafana',
+  'WCAG',
+  'Lighthouse',
 ];
 
 const HOW_I_WORK = [
@@ -52,7 +54,7 @@ const HOW_I_WORK = [
       </>
     ),
     title: 'I sweat the small details',
-    body: 'Empty states, error messages, focus rings, a loading state that does not jump. People notice when they are missing.',
+    body: 'Empty states, error messages, focus rings, a loading state that does not jump. People notice when they are missing.\nEvery page works with a keyboard and a screen reader, respects reduced motion, and fits a small phone. I check contrast against WCAG and loading speed with Lighthouse.',
   },
 ];
 

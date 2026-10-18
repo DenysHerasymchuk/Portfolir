@@ -131,6 +131,8 @@ const URLS: Record<string, string> = {
   MoSCoW: 'https://en.wikipedia.org/wiki/MoSCoW_method',
   'weighted decision matrix': 'https://en.wikipedia.org/wiki/Decision_matrix',
   Photoshop: 'https://www.adobe.com/products/photoshop.html',
+  WCAG: 'https://www.w3.org/WAI/standards-guidelines/wcag/',
+  Lighthouse: 'https://developer.chrome.com/docs/lighthouse/overview',
   BM25: 'https://en.wikipedia.org/wiki/Okapi_BM25',
   Caddy: 'https://caddyserver.com',
   Celery: 'https://docs.celeryq.dev',
