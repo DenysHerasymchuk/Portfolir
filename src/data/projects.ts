@@ -36,6 +36,402 @@ export type Project = {
 
 export const PROJECTS: Project[] = [
   {
+    slug: 'floodline',
+    name: 'Floodline',
+    tagline: 'River sensors and a forecast that warn a street hours before the water reaches it.',
+    summary:
+      'Flood early warning for the Vesdre and Meuse valleys: low-power sensors measure river levels and rain, a model forecasts the next six hours, and residents get alerts for their own street.',
+    year: '2026',
+    role: 'Solo project. Sensor network, data pipeline, forecasting model, alert app.',
+    duration: '6 months',
+    overview: [
+      'In July 2021 the Vesdre rose faster than anyone expected, and many people in Pepinster and Verviers had minutes of warning instead of hours. Floodline is my attempt at the part of that problem software can help with: knowing early, per street, how high the water will get.',
+      'Battery-powered sensors along the river measure water level and rainfall every five minutes and send them over LoRaWAN, a radio network that reaches kilometres on very little power. The readings flow through Kafka into a forecasting model that predicts the level at each river section six hours ahead, updated every time new data arrives.',
+      'Residents pick their street once. When the forecast for their section crosses a threshold, they get a push notification and an SMS with the expected peak time and height. A Grafana board gives the crisis team the same picture for the whole valley.',
+    ],
+    responsibilities: [
+      'Chose the sensors, set up the LoRaWAN gateways and wrote the Go service that turns radio messages into clean readings.',
+      'Built the forecasting model in Python and the backtests against historical river data.',
+      'Built the alert service and the React app where residents follow their street.',
+      'Ran the system on Kubernetes with Prometheus and Grafana watching every sensor and job.',
+    ],
+    stack: [
+      { layer: 'Frontend', items: ['React', 'TypeScript', 'Tailwind CSS'] },
+      { layer: 'Backend', items: ['Go', 'Python'] },
+      { layer: 'Data', items: ['PostgreSQL', 'SQLite', 'Kafka', 'Redis'] },
+      { layer: 'Infra', items: ['Docker', 'Kubernetes', 'Prometheus', 'Grafana'] },
+    ],
+    architecture: {
+      nodes: [
+        { id: 'sensors', label: 'River sensors', detail: 'Level + rain', x: 90, y: 150, kind: 'client' },
+        { id: 'gateway', label: 'LoRa gateways', detail: 'MQTT, SQLite buffer', x: 300, y: 150, kind: 'edge' },
+        { id: 'ingest', label: 'Ingest', detail: 'Go, cleaning', x: 510, y: 150, kind: 'service' },
+        { id: 'kafka', label: 'Kafka', detail: 'Readings', x: 720, y: 150, kind: 'queue' },
+        { id: 'model', label: 'Forecast', detail: 'Python, 6h ahead', x: 910, y: 280, kind: 'service' },
+        { id: 'db', label: 'Postgres', detail: 'Readings, forecasts', x: 720, y: 410, kind: 'store' },
+        { id: 'alerts', label: 'Alerts', detail: 'Go, push + SMS', x: 510, y: 410, kind: 'service' },
+        { id: 'app', label: 'Resident app', detail: 'React', x: 300, y: 410, kind: 'client' },
+      ],
+      edges: [
+        { from: 'sensors', to: 'gateway', label: 'LoRaWAN' },
+        { from: 'gateway', to: 'ingest', label: 'MQTT' },
+        { from: 'ingest', to: 'kafka', label: 'readings' },
+        { from: 'kafka', to: 'model' },
+        { from: 'model', to: 'db', label: 'forecasts' },
+        { from: 'db', to: 'alerts', label: 'thresholds' },
+        { from: 'alerts', to: 'app', label: 'push' },
+      ],
+      notes: [
+        {
+          title: 'Gateways',
+          body: 'Sensors send a reading every five minutes. Gateways on rooftops forward them over MQTT and keep up to 48 hours of readings in SQLite if their uplink drops, so a storm that knocks out the mobile network does not leave holes in the data.',
+        },
+        {
+          title: 'Ingest',
+          body: 'A Go service checks each reading against the calibration of its sensor, drops obvious glitches such as a level jumping two metres in five minutes, and publishes clean readings to Kafka. Every sensor has a health score, and Prometheus warns me when one goes quiet.',
+        },
+        {
+          title: 'Forecast model',
+          body: 'A gradient boosted model in Python predicts the level at each river section from 15 minutes to 6 hours ahead, using upstream levels, rainfall and soil moisture. It is retrained weekly and backtested on the 2021 flood and other high-water events before a new version goes live.',
+        },
+        {
+          title: 'Alerts',
+          body: 'Thresholds are set per street from the height of the lowest doorways, not one number for the whole river. Alerts include the expected peak time and height, and they are only sent again when the forecast changes by more than 20 centimetres, so people do not learn to ignore them.',
+        },
+      ],
+    },
+    decisions: [
+      {
+        title: 'LoRaWAN instead of mobile data',
+        body: 'Sensors along a river sit in valleys with poor coverage and no power. LoRaWAN reaches several kilometres, and a sensor runs about three years on one battery.',
+      },
+      {
+        title: 'Forecast per street, not per river',
+        body: 'A single warning level for a whole river is what people learned to ignore. Mapping each river section to the streets it floods made alerts rarer and much more specific.',
+      },
+      {
+        title: 'Kafka between sensors and the model',
+        body: 'During a storm, readings arrive in bursts after gateways reconnect. Kafka absorbs the burst and lets me replay a whole night of data through a new model version.',
+      },
+    ],
+    challenges: [
+      {
+        title: 'Gateways going offline in storms',
+        body: 'The first gateway lost power during heavy rain, exactly when the data mattered most. Each gateway now has a small battery and the SQLite buffer, and readings are backfilled in order when it comes back.',
+      },
+      {
+        title: 'Too many false alarms',
+        body: 'Early versions warned on every rainy afternoon. Per-street thresholds and a minimum forecast confidence cut false alarms by about 80% in the backtests.',
+      },
+    ],
+    results: [
+      { value: '6h', label: 'Forecast horizon' },
+      { value: '92%', label: 'Floods caught 2h+ ahead in backtests' },
+      { value: '3y', label: 'Sensor battery life' },
+      { value: '5min', label: 'Reading interval' },
+    ],
+    images: [
+      { alt: 'Floodline resident app with a street forecast', caption: 'Street forecast' },
+      { alt: 'Map of sensors along the Vesdre', caption: 'Sensor map' },
+      { alt: 'Grafana board for the crisis team', caption: 'Crisis board' },
+    ],
+    hue: 175,
+  },
+  {
+    slug: 'spoorzicht',
+    name: 'Spoorzicht',
+    tagline: 'Know if your train will be late before the board does, and whether you will make your connection.',
+    summary:
+      'Delay predictions for every Belgian train and station, trained on years of iRail open data and live weather, with a map that shows delays spreading through the network.',
+    year: '2026',
+    role: 'Solo project. Data pipeline, models, map and API.',
+    duration: '4 months',
+    overview: [
+      'Belgian trains share a dense network, so one late train in Brussels can delay others an hour later in Ghent or Liège. Spoorzicht predicts those delays per train and per station, and answers the question people actually have on the platform: will I make my connection?',
+      'iRail publishes live departures and delays for the whole NMBS/SNCB network as open data. I poll it every 30 seconds, store years of history, and combine it with weather and calendar data such as school holidays and strikes. Python models trained on that history predict the delay at each upcoming stop.',
+      'The web app shows a live map where delays spread along the lines in real time. Pick two trains and it gives the chance of catching the connection, with the reason in plain words, such as "this train usually loses three minutes before Brussels-North".',
+    ],
+    responsibilities: [
+      'Wrote the Node.js poller that keeps a clean live feed from iRail and publishes it to Kafka.',
+      'Built the feature pipeline and the delay models in Python, with nightly retraining.',
+      'Built the React map that animates delays across the network.',
+      'Wrote the connection checker API and a backtest that compares predictions with what really happened.',
+    ],
+    stack: [
+      { layer: 'Frontend', items: ['React', 'TypeScript', 'Tailwind CSS'] },
+      { layer: 'Backend', items: ['Python', 'Node.js'] },
+      { layer: 'Data', items: ['PostgreSQL', 'Kafka', 'Redis'] },
+      { layer: 'Infra', items: ['Docker', 'Kubernetes', 'Prometheus', 'Grafana'] },
+    ],
+    architecture: {
+      nodes: [
+        { id: 'irail', label: 'iRail', detail: 'Open train data', x: 90, y: 150, kind: 'client' },
+        { id: 'poller', label: 'Poller', detail: 'Node.js, every 30s', x: 300, y: 150, kind: 'service' },
+        { id: 'kafka', label: 'Kafka', detail: 'Live events', x: 510, y: 150, kind: 'queue' },
+        { id: 'features', label: 'Features', detail: 'Python, weather', x: 720, y: 150, kind: 'service' },
+        { id: 'model', label: 'Delay model', detail: 'Python, nightly', x: 910, y: 280, kind: 'service' },
+        { id: 'db', label: 'Postgres', detail: 'History, predictions', x: 720, y: 410, kind: 'store' },
+        { id: 'api', label: 'API', detail: 'Node.js, Redis', x: 510, y: 410, kind: 'service' },
+        { id: 'map', label: 'Live map', detail: 'React', x: 300, y: 410, kind: 'client' },
+      ],
+      edges: [
+        { from: 'irail', to: 'poller', label: 'poll' },
+        { from: 'poller', to: 'kafka', label: 'events' },
+        { from: 'kafka', to: 'features' },
+        { from: 'features', to: 'model' },
+        { from: 'model', to: 'db', label: 'predictions' },
+        { from: 'db', to: 'api' },
+        { from: 'api', to: 'map', label: 'live' },
+      ],
+      notes: [
+        {
+          title: 'Collection',
+          body: 'The poller asks iRail for every departure board every 30 seconds, removes duplicates and turns the boards into events such as "IC 1832 left Leuven 4 minutes late". Those events go to Kafka, so the models, the map and the history all read the same stream.',
+        },
+        {
+          title: 'Training data',
+          body: 'Each prediction uses the current delay, the delay this train usually builds up on each stretch, how busy the line is, the weather and the calendar. Five years of history in Postgres gives about 40 million stops to learn from.',
+        },
+        {
+          title: 'Delay model',
+          body: 'A gradient boosted model predicts the delay at every upcoming stop. It is retrained every night on the latest data and only replaces the live version if it beats it on the last two weeks.',
+        },
+        {
+          title: 'Live map',
+          body: 'Redis holds the live position and delay of every train, and the React map redraws from it once a second. The connection checker combines two delay predictions into one chance and shows which stretch of the journey is the risk.',
+        },
+      ],
+    },
+    decisions: [
+      {
+        title: 'Predict per stop, not per train',
+        body: 'A train can be on time in Antwerp and ten minutes late in Brussels. Predicting each stop separately made the connection checker possible and was more accurate than one number per journey.',
+      },
+      {
+        title: 'Simple models over deep learning',
+        body: 'Gradient boosted trees trained in minutes, were easy to explain and beat my neural network attempts on this data. Being able to say why a prediction is high matters to people on a platform.',
+      },
+    ],
+    challenges: [
+      {
+        title: 'Gaps in the live feed',
+        body: 'Sometimes a train disappears from the boards for a few stations. The pipeline now fills short gaps from the timetable and marks them, so the model does not learn from made-up delays.',
+      },
+      {
+        title: 'Strike days skewing the model',
+        body: 'Strike days look like extreme delays and confused the model. They are now flagged from the calendar and handled separately, which cut the average error on normal days by 18%.',
+      },
+    ],
+    results: [
+      { value: '1.8min', label: 'Average error at the next stop' },
+      { value: '86%', label: 'Connections called right' },
+      { value: '40M', label: 'Stops in the training data' },
+      { value: '30s', label: 'Live update interval' },
+    ],
+    images: [
+      { alt: 'Spoorzicht live map of delays across Belgium', caption: 'Live delay map' },
+      { alt: 'Connection checker for two trains', caption: 'Connection checker' },
+      { alt: 'Backtest report comparing predictions and real delays', caption: 'Model backtest' },
+    ],
+    hue: 55,
+  },
+  {
+    slug: 'gridflex',
+    name: 'Gridflex',
+    tagline:
+      'Keeps your monthly power peak low by moving the car, the heat pump and the battery to the right quarter hour.',
+    summary:
+      'A home energy agent built for the Flemish capacity tariff: it watches the meter, forecasts solar and household use, and shifts flexible loads so the monthly peak stays low.',
+    year: '2025',
+    role: 'Solo project. Device agent, forecasting, backend, app.',
+    duration: '5 months',
+    overview: [
+      'Since 2023, households in Flanders pay part of their electricity bill based on their highest 15-minute peak of the month. Charging the car while the oven and heat pump are on can set an expensive peak in one evening. Gridflex is an agent that sits in the house and stops that from happening.',
+      'A small Go program on a Raspberry Pi reads the digital meter every second through its P1 port and talks to the EV charger, heat pump and home battery over the local network. It forecasts solar output and household use for the next day, plans when each flexible device should run, and adjusts the plan live if someone turns on the oven.',
+      'The Angular app shows the house in real time, the current quarter hour, and how much the agent saved this month. A .NET backend stores history, handles accounts and pushes new forecast models to every house.',
+    ],
+    responsibilities: [
+      'Wrote the Go agent that reads the meter and controls the charger, heat pump and battery.',
+      'Built the solar and load forecasts in Python and the planner that schedules flexible devices.',
+      'Built the .NET backend in C# for accounts, history and model updates.',
+      'Built the Angular app with a live view of the house.',
+    ],
+    stack: [
+      { layer: 'Frontend', items: ['Angular', 'TypeScript', 'Tailwind CSS'] },
+      { layer: 'Backend', items: ['Go', '.NET', 'C#', 'Python'] },
+      { layer: 'Data', items: ['PostgreSQL', 'SQLite', 'Redis'] },
+      { layer: 'Infra', items: ['Docker', 'Linux', 'Caddy', 'Grafana'] },
+    ],
+    architecture: {
+      nodes: [
+        { id: 'meter', label: 'Digital meter', detail: 'P1, every second', x: 90, y: 150, kind: 'client' },
+        { id: 'devices', label: 'Devices', detail: 'Charger, heat pump', x: 90, y: 410, kind: 'client' },
+        { id: 'agent', label: 'Home agent', detail: 'Go, Raspberry Pi', x: 330, y: 280, kind: 'service' },
+        { id: 'local', label: 'Local history', detail: 'SQLite', x: 560, y: 410, kind: 'store' },
+        { id: 'backend', label: 'Backend', detail: '.NET, C#', x: 560, y: 150, kind: 'service' },
+        { id: 'forecast', label: 'Forecasts', detail: 'Python models', x: 800, y: 150, kind: 'service' },
+        { id: 'db', label: 'Postgres', detail: 'History, accounts', x: 800, y: 410, kind: 'store' },
+        { id: 'app', label: 'App', detail: 'Angular', x: 930, y: 280, kind: 'client' },
+      ],
+      edges: [
+        { from: 'meter', to: 'agent', label: 'P1' },
+        { from: 'agent', to: 'devices', label: 'control' },
+        { from: 'agent', to: 'local' },
+        { from: 'agent', to: 'backend', label: 'sync' },
+        { from: 'backend', to: 'forecast', label: 'train' },
+        { from: 'backend', to: 'db' },
+        { from: 'forecast', to: 'app' },
+      ],
+      notes: [
+        {
+          title: 'Collection',
+          body: 'The agent reads the P1 port of the digital meter every second and keeps a running estimate of the current quarter hour. By minute 7 it knows whether the quarter is heading for a new peak, which leaves time to react.',
+        },
+        {
+          title: 'Planning',
+          body: 'Every night the agent builds a plan for the next day from the solar and usage forecasts: when to charge the car, when to preheat the house, when the battery should charge or help out. During the day it corrects the plan every minute when reality differs from the forecast.',
+        },
+        {
+          title: 'Device control',
+          body: 'Chargers, heat pumps and batteries speak different protocols, mostly Modbus and OCPP. The agent wraps each one in the same small interface: what it draws now, how much it can shift, and how to tell it to change. Adding a new brand is one Go file.',
+        },
+        {
+          title: 'Forecasts',
+          body: 'Python models forecast solar output from the weather forecast and the panel layout, and household use from the past weeks. The backend trains them per house and pushes new versions to the agent, which keeps working offline with the last one it received.',
+        },
+      ],
+    },
+    decisions: [
+      {
+        title: 'Run the planner in the house',
+        body: 'If the internet drops, the peak still counts. Putting the planner on the Raspberry Pi with a local SQLite history means the house keeps optimising without a connection.',
+      },
+      {
+        title: 'Plan ahead, correct live',
+        body: 'Pure live control reacts too late within a 15-minute window. A day plan plus a correction every minute kept peaks low without constantly switching devices on and off.',
+      },
+    ],
+    challenges: [
+      {
+        title: 'Heat pumps that ignored commands',
+        body: 'One heat pump brand accepted commands and then went back to its own schedule. The agent now reads back the state after every change and marks devices that do not follow, so the planner stops relying on them.',
+      },
+      {
+        title: 'Comfort complaints',
+        body: 'Early plans saved money but left the house cold in the morning. Each house now has comfort limits the planner may never cross. Savings dropped a little and the complaints stopped.',
+      },
+    ],
+    results: [
+      { value: '31%', label: 'Lower monthly peak' },
+      { value: '€180', label: 'Saved per year in the test house' },
+      { value: '1s', label: 'Meter reading interval' },
+      { value: '4', label: 'Device brands supported' },
+    ],
+    images: [
+      { alt: 'Gridflex live view of the house', caption: 'Live house' },
+      { alt: 'Day plan for car, heat pump and battery', caption: 'Day plan' },
+      { alt: 'Monthly peak and savings report', caption: 'Monthly report' },
+    ],
+    hue: 85,
+  },
+  {
+    slug: 'railwatch',
+    name: 'Railwatch',
+    tagline: 'Sensors on rail switches that spot wear days before a switch fails.',
+    summary:
+      'Predictive maintenance for railway switches: sensors run an anomaly model on the device, send only what matters, and every switch gets a risk score for the maintenance crews.',
+    year: '2025',
+    role: 'Solo project. Edge model, data pipeline, fleet dashboard.',
+    duration: '5 months',
+    overview: [
+      'A railway switch that fails can stop a whole line, and most failures give small warnings first: a motor that draws a bit more current, a blade that vibrates differently when it moves. Railwatch puts sensors on switches to catch those warnings early, so crews can fix a switch during a planned night shift instead of during rush hour.',
+      'Each sensor box records vibration and motor current every time the switch moves, plus the temperature. A small model runs on the box itself and compares each movement with what is normal for that switch. Normal movements are summarised and unusual ones are sent in full, which keeps data costs low across thousands of switches.',
+      'In the backend, Kafka collects events from every switch, a Python model turns them into a risk score, and a dashboard ranks switches by how likely they are to fail in the coming week. Crews see the evidence behind each score, not only a red dot.',
+    ],
+    responsibilities: [
+      'Built the Go service on the sensor box that records each switch movement and runs the edge model.',
+      'Trained the anomaly and risk models in Python on recorded movements.',
+      'Built the Kafka pipeline and the storage for raw movements and risk scores.',
+      'Built the React fleet dashboard that crews use to plan maintenance.',
+    ],
+    stack: [
+      { layer: 'Frontend', items: ['React', 'TypeScript', 'Tailwind CSS'] },
+      { layer: 'Backend', items: ['Go', 'Python'] },
+      { layer: 'Data', items: ['MongoDB', 'Kafka', 'PostgreSQL'] },
+      { layer: 'Infra', items: ['Docker', 'Kubernetes', 'Linux', 'Grafana'] },
+    ],
+    architecture: {
+      nodes: [
+        { id: 'switch', label: 'Switch sensors', detail: 'Vibration, current', x: 90, y: 150, kind: 'client' },
+        { id: 'box', label: 'Edge box', detail: 'Go + model', x: 300, y: 150, kind: 'service' },
+        { id: 'kafka', label: 'Kafka', detail: 'Movement events', x: 510, y: 150, kind: 'queue' },
+        { id: 'raw', label: 'MongoDB', detail: 'Raw movements', x: 720, y: 150, kind: 'store' },
+        { id: 'risk', label: 'Risk model', detail: 'Python, hourly', x: 510, y: 410, kind: 'service' },
+        { id: 'scores', label: 'Postgres', detail: 'Scores, work orders', x: 720, y: 410, kind: 'store' },
+        { id: 'dash', label: 'Fleet dashboard', detail: 'React', x: 910, y: 280, kind: 'client' },
+      ],
+      edges: [
+        { from: 'switch', to: 'box', label: 'signals' },
+        { from: 'box', to: 'kafka', label: 'anomalies' },
+        { from: 'kafka', to: 'raw', label: 'store' },
+        { from: 'kafka', to: 'risk' },
+        { from: 'risk', to: 'scores', label: 'scores' },
+        { from: 'scores', to: 'dash' },
+        { from: 'raw', to: 'dash', label: 'evidence' },
+      ],
+      notes: [
+        {
+          title: 'On-device model',
+          body: 'Every movement of the switch produces a short vibration and current signal. The box compares it with the normal pattern for that switch, learned in its first two weeks, and only sends movements that look unusual. That cuts the data sent by about 95%.',
+        },
+        {
+          title: 'Ingest',
+          body: 'Boxes send events over the mobile network to Kafka. If a box loses its connection it keeps events on disk and sends them later, in order, with the original timestamps.',
+        },
+        {
+          title: 'Storage',
+          body: 'Raw movement signals go to MongoDB, where each document holds one movement with its signal and metadata. Risk scores and work orders live in Postgres, because crews query them by line, region and date.',
+        },
+        {
+          title: 'Risk scoring',
+          body: 'A Python model combines recent anomalies, temperature, how often the switch moves and its repair history into a risk score for the next seven days. Scores are recalculated every hour, and the dashboard shows the movements that pushed a score up.',
+        },
+      ],
+    },
+    decisions: [
+      {
+        title: 'Model on the device',
+        body: 'Sending every movement from thousands of switches would be expensive and mostly noise. Deciding on the box what is unusual kept data costs low and still kept the full signal of every movement that matters.',
+      },
+      {
+        title: 'MongoDB for raw signals',
+        body: 'Signals differ in length and in which sensors a box has. Storing each movement as a document fit that better than a fixed table, while scores stay in Postgres where reporting is easy.',
+      },
+    ],
+    challenges: [
+      {
+        title: 'Cold mornings looked like failures',
+        body: 'Switches move stiffer on frosty mornings, and early versions flagged half the fleet in January. Temperature is now part of what normal means for each switch.',
+      },
+      {
+        title: 'Too few real failures to learn from',
+        body: 'Failures are rare, which makes training hard. I combined the few recorded failures with simulated wear on a test switch to give the model enough examples.',
+      },
+    ],
+    results: [
+      { value: '4.5d', label: 'Average warning before a failure' },
+      { value: '95%', label: 'Less data sent' },
+      { value: '81%', label: 'Failures flagged in advance' },
+      { value: '1h', label: 'Risk score refresh' },
+    ],
+    images: [
+      { alt: 'Railwatch fleet dashboard ranked by risk', caption: 'Fleet risk' },
+      { alt: 'Movement signal of one switch over a week', caption: 'Switch signals' },
+      { alt: 'Work order planner for night shifts', caption: 'Work orders' },
+    ],
+    hue: 310,
+  },
+  {
     slug: 'streamline',
     name: 'Streamline',
     tagline: 'Live streaming with about two seconds of delay, and a chat that keeps up with big channels.',

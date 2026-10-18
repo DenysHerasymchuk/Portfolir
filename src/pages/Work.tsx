@@ -11,8 +11,8 @@ export default function Work() {
       <header className="max-w-3xl">
         <h1 className="font-display text-7xl leading-none sm:text-8xl">Work</h1>
         <p className="mt-6 text-lg leading-relaxed text-ink/75 sm:text-xl">
-          Six systems I designed and built end to end. Each one has its own page with the architecture, the trade-offs I
-          made and the problems I ran into along the way.
+          Systems I designed and built end to end, from sensors in the field to the screen. Each one has its own page
+          with the architecture, the trade-offs I made and the problems I ran into along the way.
         </p>
       </header>
 
