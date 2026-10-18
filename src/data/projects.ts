@@ -1239,7 +1239,7 @@ export const PROJECTS: Project[] = [
       'Wrote the seed data and the demo script for the final pitch.',
     ],
     stack: [
-      { layer: 'Frontend', items: ['JavaScript', 'Tailwind CSS'] },
+      { layer: 'Frontend', items: ['Alpine.js', 'Tailwind CSS'] },
       { layer: 'Backend', items: ['Laravel', 'PHP'] },
       { layer: 'Data', items: ['MySQL'] },
       { layer: 'Infra', items: ['Docker'] },

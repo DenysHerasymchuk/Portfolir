@@ -1,3 +1,4 @@
+import alpine from '../assets/stack/alpinedotjs.svg';
 import angular from '../assets/stack/angular.svg';
 import claude from '../assets/stack/claude.svg';
 import caddy from '../assets/stack/caddy.svg';
@@ -32,6 +33,7 @@ const EXTRA: Record<string, { icon: string; hex: string; color?: boolean }> = {
   Prometheus: { icon: prometheus, hex: '#E6522C' },
   Grafana: { icon: grafana, hex: '#F46800' },
   Playwright: { icon: playwright, hex: '#ffffff', color: true },
+  'Alpine.js': { icon: alpine, hex: '#8BC0D0' },
   Angular: { icon: angular, hex: '#0F0F11' },
   HTML: { icon: html, hex: '#E34F26' },
   CSS: { icon: css, hex: '#663399' },
@@ -85,7 +87,7 @@ export const brandColor = (name: string): string | undefined => {
 
 // Everything on the Stack page, grouped. Also feeds the hero tiles and the footer's falling logos.
 export const STACK_GROUPS = [
-  { name: 'Frontend', items: ['TypeScript', 'React', 'Angular', 'Tailwind CSS'] },
+  { name: 'Frontend', items: ['TypeScript', 'React', 'Angular', 'Alpine.js', 'Tailwind CSS'] },
   { name: 'Backend', items: ['Go', 'Node.js', 'Python', '.NET', 'Laravel'] },
   { name: 'Data', items: ['PostgreSQL', 'MySQL', 'SQLite', 'MongoDB', 'Redis', 'Kafka'] },
   { name: 'Infrastructure', items: ['Docker', 'Kubernetes', 'Linux', 'Caddy', 'Prometheus', 'Grafana'] },
@@ -125,6 +127,7 @@ const URLS: Record<string, string> = {
   Go: 'https://go.dev',
   Grafana: 'https://grafana.com',
   Angular: 'https://angular.dev',
+  'Alpine.js': 'https://alpinejs.dev',
   HTML: 'https://developer.mozilla.org/docs/Web/HTML',
   CSS: 'https://developer.mozilla.org/docs/Web/CSS',
   JavaScript: 'https://developer.mozilla.org/docs/Web/JavaScript',
