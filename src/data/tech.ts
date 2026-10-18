@@ -3,6 +3,7 @@ import claude from '../assets/stack/claude.svg';
 import caddy from '../assets/stack/caddy.svg';
 import celery from '../assets/stack/celery.svg';
 import clickhouse from '../assets/stack/clickhouse.svg';
+import csharp from '../assets/stack/csharp.svg';
 import css from '../assets/stack/css.svg';
 import dotnet from '../assets/stack/dotnet.svg';
 import d3 from '../assets/stack/d3.svg';
@@ -58,6 +59,7 @@ const EXTRA: Record<string, { icon: string; hex: string; color?: boolean }> = {
   CSS: { icon: css, hex: '#663399' },
   JavaScript: { icon: javascript, hex: '#F7DF1E' },
   '.NET': { icon: dotnet, hex: '#512BD4' },
+  'C#': { icon: csharp, hex: '#239120' }, // Devicon (MIT); Simple Icons has none
   Laravel: { icon: laravel, hex: '#FF2D20' },
   'Claude Code': { icon: claude, hex: '#D97757' },
   Helm: { icon: helm, hex: '#0F1689' },
@@ -97,7 +99,7 @@ export const STACK_GROUPS = [
   { name: 'Tools', items: ['Git', 'Figma', 'Playwright'] },
   { name: 'AI Coding', items: ['Claude Code', 'Subagents', 'Skills', 'MCP'] },
   // Swaps its title for `alias` on hover.
-  { name: 'Bonus', alias: 'Goes without saying', items: ['HTML', 'CSS', 'JavaScript', 'Laravel'] },
+  { name: 'Bonus', alias: 'Goes without saying', items: ['HTML', 'CSS', 'JavaScript', 'C#', 'Laravel'] },
 ];
 
 // The hero's two tiles, alternating through every listed tool that has a logo.
@@ -130,6 +132,7 @@ const URLS: Record<string, string> = {
   JavaScript: 'https://developer.mozilla.org/docs/Web/JavaScript',
   Laravel: 'https://laravel.com',
   '.NET': 'https://dotnet.microsoft.com',
+  'C#': 'https://learn.microsoft.com/dotnet/csharp',
   MySQL: 'https://www.mysql.com',
   SQLite: 'https://sqlite.org',
   MongoDB: 'https://www.mongodb.com',
