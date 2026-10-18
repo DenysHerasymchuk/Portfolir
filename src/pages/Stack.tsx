@@ -3,12 +3,13 @@ import { techUrl } from '../data/tech';
 import { PROJECTS } from '../data/projects';
 
 const GROUPS = [
-  { name: 'Frontend', items: ['React', 'TypeScript', 'Tailwind CSS', 'hls.js', 'WebRTC', 'D3'] },
+  { name: 'Frontend', items: ['React', 'TypeScript', 'Tailwind CSS', 'Angular', 'hls.js', 'WebRTC', 'D3'] },
   { name: 'Backend', items: ['Go', 'Node.js', 'Python', 'FastAPI', 'PHP', 'WebSockets', 'gRPC'] },
   { name: 'Data', items: ['PostgreSQL', 'Redis', 'Kafka', 'ClickHouse', 'pgvector'] },
   { name: 'Infrastructure', items: ['Docker', 'Kubernetes', 'Linux', 'Caddy', 'Prometheus', 'Grafana'] },
   { name: 'Tools', items: ['Git', 'Figma', 'Vitest', 'Playwright'] },
-  { name: 'AI Development', items: ['Claude Code', 'Plan mode', 'Context engineering', 'Subagents', 'Skills', 'MCP'] },
+  { name: 'AI Coding', items: ['Claude Code', 'Plan mode', 'Context engineering', 'Subagents', 'Skills', 'MCP'] },
+  { name: 'Bonus', items: ['HTML', 'CSS', 'JavaScript', 'Laravel'] },
 ];
 
 const usedIn = (tech: string) => PROJECTS.filter(p => p.stack.some(g => g.items.includes(tech)));

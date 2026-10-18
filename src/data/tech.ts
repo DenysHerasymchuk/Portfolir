@@ -1,7 +1,9 @@
+import angular from '../assets/stack/angular.svg';
 import claude from '../assets/stack/claude.svg';
 import caddy from '../assets/stack/caddy.svg';
 import celery from '../assets/stack/celery.svg';
 import clickhouse from '../assets/stack/clickhouse.svg';
+import css from '../assets/stack/css.svg';
 import d3 from '../assets/stack/d3.svg';
 import fastapi from '../assets/stack/fastapi.svg';
 import ffmpeg from '../assets/stack/ffmpeg.svg';
@@ -9,8 +11,11 @@ import github from '../assets/stack/github.svg';
 import grpc from '../assets/stack/grpc.svg';
 import grafana from '../assets/stack/grafana.svg';
 import helm from '../assets/stack/helm.svg';
+import html from '../assets/stack/html5.svg';
+import javascript from '../assets/stack/javascript.svg';
 import kafka from '../assets/stack/apachekafka.svg';
 import kubernetes from '../assets/stack/kubernetes.svg';
+import laravel from '../assets/stack/laravel.svg';
 import minio from '../assets/stack/minio.svg';
 import opentelemetry from '../assets/stack/opentelemetry.svg';
 import playwright from '../assets/stack/playwright.svg';
@@ -45,6 +50,11 @@ const EXTRA: Record<string, { icon: string; hex: string; color?: boolean }> = {
   Playwright: { icon: playwright, hex: '#ffffff', color: true },
   gRPC: { icon: grpc, hex: '#ffffff', color: true },
   'hls.js': { icon: videoDev, hex: '#ffffff', color: true },
+  Angular: { icon: angular, hex: '#0F0F11' },
+  HTML: { icon: html, hex: '#E34F26' },
+  CSS: { icon: css, hex: '#663399' },
+  JavaScript: { icon: javascript, hex: '#F7DF1E' },
+  Laravel: { icon: laravel, hex: '#FF2D20' },
   'Claude Code': { icon: claude, hex: '#D97757' },
   Helm: { icon: helm, hex: '#0F1689' },
   MinIO: { icon: minio, hex: '#C72E49' },
@@ -92,6 +102,11 @@ const URLS: Record<string, string> = {
   Go: 'https://go.dev',
   Grafana: 'https://grafana.com',
   Helm: 'https://helm.sh',
+  Angular: 'https://angular.dev',
+  HTML: 'https://developer.mozilla.org/docs/Web/HTML',
+  CSS: 'https://developer.mozilla.org/docs/Web/CSS',
+  JavaScript: 'https://developer.mozilla.org/docs/Web/JavaScript',
+  Laravel: 'https://laravel.com',
   'Claude Code': 'https://code.claude.com/docs/en/overview',
   'Plan mode': 'https://code.claude.com/docs/en/common-workflows',
   'Context engineering': 'https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents',
