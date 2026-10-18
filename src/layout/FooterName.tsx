@@ -207,11 +207,13 @@ export default function FooterName() {
   return (
     <>
       {/* Decorative, so hidden from screen readers and the tab order. Sized by viewport width to span the
-          screen; the box is shorter than the letters, so they sink off the bottom edge. */}
+          screen; the box is shorter than the letters, so they sink off the bottom edge. Phones show more of
+          each letter, so it sits clear of the home bar and is easy to tap. touch-manipulation stops quick
+          repeat taps from zooming the page instead of popping tiles. */}
       <div
         ref={nameRef}
         aria-hidden="true"
-        className="mt-28 flex h-[0.48em] select-none justify-center whitespace-nowrap font-craze text-[30vw] leading-[0.8]"
+        className="mt-28 flex h-[0.62em] select-none justify-center whitespace-nowrap font-craze text-[30vw] leading-[0.8] sm:h-[0.48em]"
       >
         {'DENYS'.split('').map((letter, i) => (
           <button
@@ -219,7 +221,7 @@ export default function FooterName() {
             type="button"
             tabIndex={-1}
             onClick={e => burst(e.currentTarget)}
-            className="origin-bottom text-[#efe8da]/[0.08] transition-colors hover:text-[#efe8da]/[0.14]"
+            className="origin-bottom touch-manipulation text-[#efe8da]/[0.08] transition-colors [-webkit-tap-highlight-color:transparent] hover:text-[#efe8da]/[0.14]"
             // Below the edge until the rise plays. Uses `translate` so the squash animation, which
             // sets transform, doesn't override it.
             style={played ? undefined : { translate: '0 70%', opacity: 0 }}
