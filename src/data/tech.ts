@@ -137,8 +137,6 @@ const URLS: Record<string, string> = {
   SQLite: 'https://sqlite.org',
   MongoDB: 'https://www.mongodb.com',
   'Claude Code': 'https://code.claude.com/docs/en/overview',
-  'Plan mode': 'https://code.claude.com/docs/en/common-workflows',
-  'Context engineering': 'https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents',
   Subagents: 'https://code.claude.com/docs/en/sub-agents',
   Skills: 'https://code.claude.com/docs/en/skills',
   MCP: 'https://modelcontextprotocol.io',
