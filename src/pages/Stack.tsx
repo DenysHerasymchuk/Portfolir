@@ -3,12 +3,12 @@ import { techUrl } from '../data/tech';
 import { PROJECTS } from '../data/projects';
 
 const GROUPS = [
-  { name: 'Frontend', items: ['React', 'TypeScript', 'Tailwind CSS', 'Angular', 'hls.js', 'WebRTC', 'D3'] },
-  { name: 'Backend', items: ['Go', 'Node.js', 'Python', 'FastAPI', 'PHP', 'WebSockets', 'gRPC'] },
-  { name: 'Data', items: ['PostgreSQL', 'Redis', 'Kafka', 'ClickHouse', 'pgvector'] },
+  { name: 'Frontend', items: ['React', 'TypeScript', 'Tailwind CSS', 'Angular'] },
+  { name: 'Backend', items: ['Go', 'Node.js', 'Python', 'PHP'] },
+  { name: 'Data', items: ['PostgreSQL', 'Redis', 'Kafka'] },
   { name: 'Infrastructure', items: ['Docker', 'Kubernetes', 'Linux', 'Caddy', 'Prometheus', 'Grafana'] },
-  { name: 'Tools', items: ['Git', 'Figma', 'Vitest', 'Playwright'] },
-  { name: 'AI Coding', items: ['Claude Code', 'Plan mode', 'Context engineering', 'Subagents', 'Skills', 'MCP'] },
+  { name: 'Tools', items: ['Git', 'Figma', 'Playwright'] },
+  { name: 'AI Coding', items: ['Claude Code', 'Subagents', 'Skills', 'MCP'] },
   { name: 'Bonus', items: ['HTML', 'CSS', 'JavaScript', 'Laravel'] },
 ];
 
