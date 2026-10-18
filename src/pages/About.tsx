@@ -8,9 +8,6 @@ import ScrollVelocity from '../components/ScrollVelocity';
 // Terms in "How I work" that link to their docs.
 const HOW_I_WORK_LINKS = [
   'StarUML',
-  'use case diagram',
-  'class diagram',
-  'sequence diagrams',
   'MoSCoW',
   'weighted decision matrix',
   'Figma',
