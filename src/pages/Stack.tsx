@@ -5,7 +5,7 @@ import { PROJECTS } from '../data/projects';
 const GROUPS = [
   { name: 'Frontend', items: ['React', 'TypeScript', 'Tailwind CSS', 'Angular'] },
   { name: 'Backend', items: ['Go', 'Node.js', 'Python', 'PHP'] },
-  { name: 'Data', items: ['PostgreSQL', 'Redis', 'Kafka'] },
+  { name: 'Data', items: ['PostgreSQL', 'MySQL', 'SQLite', 'MongoDB', 'Redis', 'Kafka'] },
   { name: 'Infrastructure', items: ['Docker', 'Kubernetes', 'Linux', 'Caddy', 'Prometheus', 'Grafana'] },
   { name: 'Tools', items: ['Git', 'Figma', 'Playwright'] },
   { name: 'AI Coding', items: ['Claude Code', 'Subagents', 'Skills', 'MCP'] },

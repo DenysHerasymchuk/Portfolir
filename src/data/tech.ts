@@ -17,6 +17,8 @@ import kafka from '../assets/stack/apachekafka.svg';
 import kubernetes from '../assets/stack/kubernetes.svg';
 import laravel from '../assets/stack/laravel.svg';
 import minio from '../assets/stack/minio.svg';
+import mongodb from '../assets/stack/mongodb.svg';
+import mysql from '../assets/stack/mysql.svg';
 import opentelemetry from '../assets/stack/opentelemetry.svg';
 import playwright from '../assets/stack/playwright.svg';
 import prometheus from '../assets/stack/prometheus.svg';
@@ -59,6 +61,8 @@ const EXTRA: Record<string, { icon: string; hex: string; color?: boolean }> = {
   Helm: { icon: helm, hex: '#0F1689' },
   MinIO: { icon: minio, hex: '#C72E49' },
   SQLite: { icon: sqlite, hex: '#003B57' },
+  MySQL: { icon: mysql, hex: '#4479A1' },
+  MongoDB: { icon: mongodb, hex: '#47A248' },
   'GitHub Apps API': { icon: github, hex: '#181717' },
 };
 
@@ -107,6 +111,9 @@ const URLS: Record<string, string> = {
   CSS: 'https://developer.mozilla.org/docs/Web/CSS',
   JavaScript: 'https://developer.mozilla.org/docs/Web/JavaScript',
   Laravel: 'https://laravel.com',
+  MySQL: 'https://www.mysql.com',
+  SQLite: 'https://sqlite.org',
+  MongoDB: 'https://www.mongodb.com',
   'Claude Code': 'https://code.claude.com/docs/en/overview',
   'Plan mode': 'https://code.claude.com/docs/en/common-workflows',
   'Context engineering': 'https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents',
