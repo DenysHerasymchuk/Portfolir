@@ -3,7 +3,7 @@ import { Link, useParams } from 'react-router';
 import ArchitectureDiagram from '../components/ArchitectureDiagram';
 import { ArrowIcon } from '../components/PrimaryButton';
 import ProjectImage from '../components/ProjectImage';
-import TechIcon from '../components/TechIcon';
+import TechChip from '../components/TechChip';
 import { PROJECTS, projectBySlug } from '../data/projects';
 import NotFound from './NotFound';
 
@@ -176,13 +176,7 @@ export default function Project() {
               <dt className="text-sm text-haze">{group.layer}</dt>
               <dd className="mt-3 flex flex-wrap gap-2">
                 {group.items.map(item => (
-                  <span
-                    key={item}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-ink/15 px-3 py-1 text-sm"
-                  >
-                    <TechIcon name={item} variant="mono" className="h-3.5 w-3.5" />
-                    {item}
-                  </span>
+                  <TechChip key={item} name={item} />
                 ))}
               </dd>
             </div>

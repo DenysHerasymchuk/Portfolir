@@ -1,4 +1,5 @@
 import TechIcon from '../components/TechIcon';
+import { techUrl } from '../data/tech';
 import { PROJECTS } from '../data/projects';
 
 const GROUPS = [
@@ -31,10 +32,16 @@ export default function Stack() {
                 const count = usedIn(item).length;
                 return (
                   <li key={item} className="flex items-center justify-between gap-4">
-                    <span className="flex items-center gap-3">
+                    <a
+                      href={techUrl(item)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group/tech flex items-center gap-3 rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-haze"
+                    >
                       <TechIcon name={item} />
-                      {item}
-                    </span>
+                      <span className="link-underline pb-0.5">{item}</span>
+                      <span className="sr-only"> (opens in a new tab)</span>
+                    </a>
                     {count > 0 && (
                       <span className="text-sm text-haze">
                         {count} {count === 1 ? 'project' : 'projects'}

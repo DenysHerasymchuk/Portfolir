@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { Link } from 'react-router';
 import { ArrowIcon } from '../../components/PrimaryButton';
 import ProjectImage from '../../components/ProjectImage';
-import TechIcon from '../../components/TechIcon';
+import TechChip from '../../components/TechChip';
 import { PROJECTS } from '../../data/projects';
 
 const FEATURED = PROJECTS.slice(0, 3);
@@ -62,32 +62,33 @@ export default function SelectedWork() {
             className="sticky mb-10 origin-top rounded-[2rem] border border-ink/10 bg-paper shadow-[0_-8px_40px_rgb(92_74_54/0.12)] last:mb-0"
             style={{ top: `calc(7rem + ${i * 1.5}rem)` }}
           >
-            <Link
-              to={`/work/${project.slug}`}
-              viewTransition
-              className="group/btn grid gap-8 p-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-haze sm:p-10 md:grid-cols-[1fr_1.15fr] md:items-center"
-            >
+            {/* Title link stretches over the card; stack chips sit above it as their own links. */}
+            <div className="group/btn relative grid gap-8 rounded-[inherit] p-6 has-[.card-link:focus-visible]:outline has-[.card-link:focus-visible]:outline-2 has-[.card-link:focus-visible]:outline-offset-4 has-[.card-link:focus-visible]:outline-haze sm:p-10 md:grid-cols-[1fr_1.15fr] md:items-center">
               <div>
                 <p className="text-sm text-haze">
                   {project.year}, {project.duration}
                 </p>
-                <h3 className="mt-2 font-craze text-5xl uppercase leading-none sm:text-6xl">{project.name}</h3>
+                <h3 className="mt-2 font-craze text-5xl uppercase leading-none sm:text-6xl">
+                  <Link
+                    to={`/work/${project.slug}`}
+                    viewTransition
+                    className="card-link after:absolute after:inset-0 after:rounded-[2rem] focus-visible:outline-none"
+                  >
+                    {project.name}
+                  </Link>
+                </h3>
                 <p className="mt-4 text-lg leading-snug sm:text-xl">{project.tagline}</p>
                 <ul className="mt-6 flex flex-wrap gap-2">
                   {project.stack
                     .flatMap(group => group.items)
                     .slice(0, 5)
                     .map(item => (
-                      <li
-                        key={item}
-                        className="inline-flex items-center gap-1.5 rounded-full border border-ink/15 px-3 py-1 text-sm text-ink/80"
-                      >
-                        <TechIcon name={item} variant="mono" className="h-3.5 w-3.5" />
-                        {item}
+                      <li key={item}>
+                        <TechChip name={item} />
                       </li>
                     ))}
                 </ul>
-                <span className="mt-8 inline-flex items-center gap-2 font-medium">
+                <span className="mt-8 inline-flex items-center gap-2 font-medium" aria-hidden="true">
                   Read the case study
                   <ArrowIcon />
                 </span>
@@ -98,7 +99,7 @@ export default function SelectedWork() {
                 hue={project.hue}
                 className="aspect-[16/10]"
               />
-            </Link>
+            </div>
           </div>
         ))}
       </div>

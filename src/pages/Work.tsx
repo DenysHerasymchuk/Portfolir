@@ -1,6 +1,6 @@
 import { Link } from 'react-router';
 import ArchitectureDiagram from '../components/ArchitectureDiagram';
-import TechIcon from '../components/TechIcon';
+import TechChip from '../components/TechChip';
 import { ArrowIcon } from '../components/PrimaryButton';
 import TiltCard from '../components/TiltCard';
 import { PROJECTS } from '../data/projects';
@@ -20,16 +20,21 @@ export default function Work() {
         {PROJECTS.map(project => (
           <li key={project.slug}>
             <TiltCard className="rounded-3xl" max={4}>
-              <Link
-                to={`/work/${project.slug}`}
-                viewTransition
-                className="group/btn grid gap-8 rounded-3xl border border-ink/10 bg-ink/[0.03] p-6 transition-colors hover:border-ink/25 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-haze sm:p-10 md:grid-cols-[1.1fr_1fr] md:items-center"
-              >
+              {/* The title link stretches over the whole card (after:inset-0); stack chips sit above it as their own links. */}
+              <div className="group/btn relative grid gap-8 rounded-3xl border border-ink/10 bg-ink/[0.03] p-6 transition-colors hover:border-ink/25 has-[.card-link:focus-visible]:outline has-[.card-link:focus-visible]:outline-2 has-[.card-link:focus-visible]:outline-offset-4 has-[.card-link:focus-visible]:outline-haze sm:p-10 md:grid-cols-[1.1fr_1fr] md:items-center">
                 <div>
                   <p className="text-sm text-haze">
                     {project.year}, {project.duration}
                   </p>
-                  <h2 className="mt-2 font-craze text-5xl uppercase leading-none sm:text-6xl">{project.name}</h2>
+                  <h2 className="mt-2 font-craze text-5xl uppercase leading-none sm:text-6xl">
+                    <Link
+                      to={`/work/${project.slug}`}
+                      viewTransition
+                      className="card-link after:absolute after:inset-0 after:rounded-3xl focus-visible:outline-none"
+                    >
+                      {project.name}
+                    </Link>
+                  </h2>
                   <p className="mt-4 text-lg leading-snug sm:text-xl">{project.tagline}</p>
                   <p className="mt-3 leading-relaxed text-ink/70">{project.summary}</p>
                   <ul className="mt-6 flex flex-wrap gap-2">
@@ -37,16 +42,12 @@ export default function Work() {
                       .flatMap(group => group.items)
                       .slice(0, 6)
                       .map(item => (
-                        <li
-                          key={item}
-                          className="inline-flex items-center gap-1.5 rounded-full border border-ink/15 px-3 py-1 text-sm text-ink/80"
-                        >
-                          <TechIcon name={item} variant="mono" className="h-3.5 w-3.5" />
-                          {item}
+                        <li key={item}>
+                          <TechChip name={item} />
                         </li>
                       ))}
                   </ul>
-                  <span className="mt-8 inline-flex items-center gap-2 font-medium">
+                  <span className="mt-8 inline-flex items-center gap-2 font-medium" aria-hidden="true">
                     Read the case study
                     <ArrowIcon />
                   </span>
@@ -59,7 +60,7 @@ export default function Work() {
                     compact
                   />
                 </div>
-              </Link>
+              </div>
             </TiltCard>
           </li>
         ))}
