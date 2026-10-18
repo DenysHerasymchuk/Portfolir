@@ -17,8 +17,22 @@ export default function Stack() {
 
       <div className="mt-20 grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
         {STACK_GROUPS.map(group => (
-          <div key={group.name} className="border-t border-ink/15 pt-6">
-            <h2 className="text-xl font-semibold">{group.name}</h2>
+          <div key={group.name} className="group/area border-t border-ink/15 pt-6">
+            <h2 className="text-xl font-semibold">
+              {'alias' in group ? (
+                // Both titles stacked in a one-line window; hovering the group rolls the alias up into view.
+                <span className="block h-7 overflow-hidden">
+                  <span className="block transition-transform duration-500 ease-[cubic-bezier(0.65,0,0.35,1)] group-focus-within/area:-translate-y-1/2 group-hover/area:-translate-y-1/2 motion-reduce:transition-none">
+                    <span className="block">{group.name}</span>
+                    <span className="block" aria-hidden="true">
+                      {group.alias}
+                    </span>
+                  </span>
+                </span>
+              ) : (
+                group.name
+              )}
+            </h2>
             <ul className="mt-5 space-y-3">
               {group.items.map(item => {
                 const count = usedIn(item).length;

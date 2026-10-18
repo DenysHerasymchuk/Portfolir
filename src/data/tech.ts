@@ -88,13 +88,14 @@ export const techLogo = (name: string): Tech | undefined => BY_NAME[ALIASES[name
 
 // Everything on the Stack page, grouped. Also feeds the hero tiles and the footer's falling logos.
 export const STACK_GROUPS = [
-  { name: 'Frontend', items: ['HTML', 'CSS', 'JavaScript', 'TypeScript', 'React', 'Angular', 'Tailwind CSS'] },
+  { name: 'Frontend', items: ['TypeScript', 'React', 'Angular', 'Tailwind CSS'] },
   { name: 'Backend', items: ['Go', 'Node.js', 'Python', 'PHP'] },
   { name: 'Data', items: ['PostgreSQL', 'MySQL', 'SQLite', 'MongoDB', 'Redis', 'Kafka'] },
   { name: 'Infrastructure', items: ['Docker', 'Kubernetes', 'Linux', 'Caddy', 'Prometheus', 'Grafana'] },
   { name: 'Tools', items: ['Git', 'Figma', 'Playwright'] },
   { name: 'AI Coding', items: ['Claude Code', 'Subagents', 'Skills', 'MCP'] },
-  { name: 'Bonus', items: ['Laravel'] },
+  // Swaps its title for `alias` on hover.
+  { name: 'Bonus', alias: 'Goes without saying', items: ['HTML', 'CSS', 'JavaScript', 'Laravel'] },
 ];
 
 // The hero's two tiles, alternating through every listed tool that has a logo.
