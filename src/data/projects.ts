@@ -650,7 +650,7 @@ export const PROJECTS: Project[] = [
     summary:
       'Real-time collaborative bookkeeping for small teams: edits merge without conflicts, every change is kept in an audit trail, and the books always balance.',
     year: '2025',
-    role: 'Solo project. Sync engine, ledger rules, web app.',
+    role: 'Team project in a Scrum team of four. I built the sync engine and the ledger rules.',
     duration: '3 months',
     overview: [
       'Small companies often keep their books in a shared spreadsheet, which breaks the moment two people edit the same cell or someone works on a train with no signal. Ledgerline is a finance workspace built for that: several people can work on the same ledger at once, offline edits merge when the connection comes back, and nothing is ever silently overwritten.',
@@ -1027,6 +1027,286 @@ export const PROJECTS: Project[] = [
       { alt: 'Search quality report over the test questions', caption: 'Quality report' },
     ],
     hue: 190,
+  },
+  {
+    slug: 'roster',
+    name: 'Roster',
+    tagline: 'Event sign-ups, member cards and board exports for a student association, in one place.',
+    summary:
+      'A member and event platform for a student association with hundreds of international members: sign-ups with waitlists, member cards and the exports the board needs every month.',
+    year: '2026',
+    role: 'Solo project for my student association. Design, backend, admin and hand-over.',
+    duration: '2 months',
+    overview: [
+      'A student association runs on lists: who signed up for the trip, who paid, who is on the waitlist, who is a member this year. Before Roster those lists lived in forms and spreadsheets that volunteers copied between by hand, and every new board had to learn the whole setup again.',
+      'Roster puts members and events in one Laravel app. Students sign up with their member card, see their place on the waitlist and get an email when a spot opens. The board sees payments and attendance per event and exports what partners or the university ask for in one click.',
+      'Boards change every year, so the admin has a short hand-over guide next to each feature, and every setting a new board needs is on one screen.',
+    ],
+    responsibilities: [
+      'Mapped how the board ran sign-ups and memberships before writing any code.',
+      'Built the Laravel app, the MySQL schema and the admin screens.',
+      'Wrote the waitlist logic and the email queue on Redis.',
+      'Wrote the hand-over guide and walked the next board through it.',
+    ],
+    stack: [
+      { layer: 'Frontend', items: ['JavaScript', 'Tailwind CSS'] },
+      { layer: 'Backend', items: ['Laravel', 'PHP'] },
+      { layer: 'Data', items: ['MySQL', 'Redis'] },
+      { layer: 'Infra', items: ['Docker', 'GitHub'] },
+    ],
+    architecture: {
+      nodes: [
+        { id: 'students', label: 'Students', detail: 'Sign-up pages', x: 90, y: 150, kind: 'client' },
+        { id: 'app', label: 'Roster app', detail: 'Laravel', x: 330, y: 150, kind: 'service' },
+        { id: 'mysql', label: 'MySQL', detail: 'Members, events', x: 570, y: 150, kind: 'store' },
+        { id: 'queue', label: 'Queue', detail: 'Redis', x: 330, y: 410, kind: 'queue' },
+        { id: 'mail', label: 'Email', detail: 'Waitlist, receipts', x: 570, y: 410, kind: 'edge' },
+        { id: 'board', label: 'Board admin', detail: 'Exports, settings', x: 820, y: 280, kind: 'client' },
+      ],
+      edges: [
+        { from: 'students', to: 'app', label: 'sign up' },
+        { from: 'app', to: 'mysql' },
+        { from: 'app', to: 'queue', label: 'jobs' },
+        { from: 'queue', to: 'mail', label: 'send' },
+        { from: 'mysql', to: 'board', label: 'exports' },
+      ],
+      notes: [
+        {
+          title: 'Sign-ups and waitlists',
+          body: 'Each event has a capacity and a waitlist. When someone cancels, the first person in line gets an email with 24 hours to confirm, and the spot moves on if they do not. Students see their place in line on the event page.',
+        },
+        {
+          title: 'Member cards',
+          body: 'Every member gets a card with a QR code. Scanning it at the door checks the membership and marks attendance, which also tells the board which events people come to.',
+        },
+        {
+          title: 'Data exports',
+          body: 'Partners and the university ask for the same lists every month. The board picks an event or a period and downloads a clean CSV, without copying anything by hand.',
+        },
+        {
+          title: 'Deploys and hand-over',
+          body: 'Roster runs in Docker, and every push to main on GitHub deploys it. The admin has a short guide next to each feature, so a new board can run it from day one.',
+        },
+      ],
+    },
+    decisions: [
+      {
+        title: 'Laravel and MySQL on cheap hosting',
+        body: 'Most student associations already rent simple PHP hosting. Laravel with MySQL runs there, so the next board does not have to look after a server I set up.',
+      },
+      {
+        title: 'One app for members and events',
+        body: 'Members, sign-ups and payments all point at the same person. Keeping them in one database ended the double bookkeeping between forms and spreadsheets.',
+      },
+    ],
+    challenges: [
+      {
+        title: 'Duplicate members',
+        body: 'Students signed up with a different email each semester, so one person could have three accounts. Sign-up now matches on student number and offers to merge accounts that look like the same person.',
+      },
+      {
+        title: 'Waitlist offers going to everyone',
+        body: 'A cancellation at midnight once offered the same spot to everyone on the waitlist. Offers now go out one at a time, in order, and expire after 24 hours.',
+      },
+    ],
+    results: [
+      { value: '400+', label: 'Members managed' },
+      { value: '6h', label: 'Volunteer time saved per week' },
+      { value: '24h', label: 'Waitlist offer window' },
+      { value: '0', label: 'Spreadsheets left' },
+    ],
+    images: [
+      { alt: 'Roster event page with sign-up and waitlist', caption: 'Event page' },
+      { alt: 'Member card with QR code', caption: 'Member card' },
+      { alt: 'Board admin with exports', caption: 'Board admin' },
+    ],
+    hue: 240,
+  },
+  {
+    slug: 'hubcast',
+    name: 'Hubcast',
+    tagline: 'Shows cafés and community hubs when they will be quiet, and what could fill those hours.',
+    summary:
+      'Built in an international team: a platform that forecasts busy and quiet hours for cafés and community hubs, and matches quiet slots with events and partner brands.',
+    year: '2026',
+    role: 'Team of five in an international programme. I built the Laravel platform and the data pipeline.',
+    duration: '2 months',
+    overview: [
+      'Cafés and community hubs are full at some hours and empty at others, and the quiet hours cost them money. Our brief in the programme was to help these "third places" stay open and lively. Hubcast tells a venue when it will be quiet next week and suggests what could fill those hours.',
+      'Venues share check-ins from their till or a simple door counter. A Python model learns the weekly rhythm of each venue and adjusts it with the weather forecast and local events. The result is a week view with the quiet slots marked.',
+      'For each quiet slot, Hubcast suggests ideas that worked elsewhere, such as a study hour, a quiz or a partner brand looking for a local spot for a tasting. We presented it as a working platform at the final showcase.',
+    ],
+    responsibilities: [
+      'Built the Laravel platform, the venue dashboard and the PostgreSQL schema.',
+      'Wrote the import that cleans check-in data from different tills and counters.',
+      'Connected the Python forecast to the platform through a small internal API.',
+      'Set up Docker so the whole team ran the same environment, and presented the demo at the showcase.',
+    ],
+    stack: [
+      { layer: 'Frontend', items: ['JavaScript', 'Tailwind CSS'] },
+      { layer: 'Backend', items: ['Laravel', 'PHP', 'Python'] },
+      { layer: 'Data', items: ['PostgreSQL'] },
+      { layer: 'Infra', items: ['Docker', 'GitHub'] },
+    ],
+    architecture: {
+      nodes: [
+        { id: 'venues', label: 'Venues', detail: 'Tills, door counters', x: 90, y: 150, kind: 'client' },
+        { id: 'import', label: 'Import', detail: 'Laravel jobs', x: 300, y: 150, kind: 'service' },
+        { id: 'db', label: 'Postgres', detail: 'Check-ins, venues', x: 510, y: 150, kind: 'store' },
+        { id: 'model', label: 'Forecast', detail: 'Python', x: 720, y: 150, kind: 'service' },
+        { id: 'partners', label: 'Partner brands', detail: 'Event offers', x: 510, y: 410, kind: 'client' },
+        { id: 'match', label: 'Suggestions', detail: 'Laravel', x: 720, y: 410, kind: 'service' },
+        { id: 'dash', label: 'Venue dashboard', detail: 'Week view', x: 910, y: 280, kind: 'client' },
+      ],
+      edges: [
+        { from: 'venues', to: 'import', label: 'check-ins' },
+        { from: 'import', to: 'db' },
+        { from: 'db', to: 'model', label: 'history' },
+        { from: 'model', to: 'match', label: 'quiet slots' },
+        { from: 'partners', to: 'match', label: 'offers' },
+        { from: 'match', to: 'dash' },
+      ],
+      notes: [
+        {
+          title: 'Collection',
+          body: 'Each till exports check-ins in its own format. The import reads the common ones, removes test transactions and turns everything into visits per 15 minutes, which is what the model needs.',
+        },
+        {
+          title: 'Forecast model',
+          body: 'A Python model learns the weekly pattern of each venue and corrects it with the weather forecast and local events. Venues with only a few weeks of data borrow the pattern of similar venues until they have enough of their own.',
+        },
+        {
+          title: 'Suggestions',
+          body: 'Ideas come from what filled similar slots at other venues and from partner brands looking for a place to host. Venues accept or skip each idea, and those choices shape the next suggestions.',
+        },
+        {
+          title: 'Builds and team setup',
+          body: 'Five people on different laptops needed the same setup. Docker Compose starts the app, the database and the model with one command, and the same images ran the demo server.',
+        },
+      ],
+    },
+    decisions: [
+      {
+        title: 'Laravel for the platform, Python for the model',
+        body: 'Most of the team knew PHP, and the forecast needed Python libraries. Keeping the model behind a small API let each part use the right tool without everyone having to learn both.',
+      },
+      {
+        title: 'A week view over live numbers',
+        body: 'Café owners plan staff and events a week ahead. A clear week with quiet slots marked was more useful to them than a live chart.',
+      },
+    ],
+    challenges: [
+      {
+        title: 'Messy till data',
+        body: 'One till logged refunds as new sales, which made a quiet Tuesday look busy. The import now pairs refunds with their sales before counting visits.',
+      },
+      {
+        title: 'New venues with no history',
+        body: 'A venue that joined last week has nothing to learn from. Borrowing the pattern of similar venues gave usable forecasts from the first day.',
+      },
+    ],
+    results: [
+      { value: '78%', label: 'Quiet slots predicted right' },
+      { value: '5', label: 'Pilot venues' },
+      { value: '15min', label: 'Forecast resolution' },
+      { value: '1', label: 'Command to run the whole stack' },
+    ],
+    images: [
+      { alt: 'Hubcast week view with quiet slots marked', caption: 'Week view' },
+      { alt: 'Suggestions for a quiet afternoon', caption: 'Suggestions' },
+      { alt: 'Team presenting Hubcast at the showcase', caption: 'Final showcase' },
+    ],
+    hue: 15,
+  },
+  {
+    slug: 'pantry',
+    name: 'Pantry',
+    tagline: 'Stock, donations and pickup slots for a local food bank, built in three days.',
+    summary:
+      'A hackathon build for a food bank: volunteers log donations and see what is running low, and families book a pickup slot from their phone.',
+    year: '2026',
+    role: 'Team of four at a three-day hackathon. I owned the backend CRUD and the admin panel.',
+    duration: '3 days',
+    overview: [
+      'A local food bank told us its biggest problems at the start of the hackathon: nobody knew exactly what was on the shelves, and families waited outside for an hour on pickup days. We had three days to build something they could try the week after.',
+      'Pantry logs every donation as it comes in, keeps stock per product and expiry date, and warns when something runs low. Families book a 15-minute pickup slot from their phone, and volunteers see who is coming and what to pack.',
+      'I owned the backend: every create, read, update and delete path for products, donations, families and slots, plus the full admin panel the volunteers use. The rest of the team built the booking pages and the pitch.',
+    ],
+    responsibilities: [
+      'Designed the MySQL schema with the team on the first evening.',
+      'Built all CRUD operations in Laravel for products, donations, families and slots.',
+      'Built the admin panel with stock warnings and the daily packing list.',
+      'Wrote the seed data and the demo script for the final pitch.',
+    ],
+    stack: [
+      { layer: 'Frontend', items: ['JavaScript', 'Tailwind CSS'] },
+      { layer: 'Backend', items: ['Laravel', 'PHP'] },
+      { layer: 'Data', items: ['MySQL'] },
+      { layer: 'Infra', items: ['Docker'] },
+    ],
+    architecture: {
+      nodes: [
+        { id: 'donors', label: 'Donations', detail: 'Logged at the door', x: 90, y: 150, kind: 'client' },
+        { id: 'admin', label: 'Admin panel', detail: 'Volunteers', x: 90, y: 410, kind: 'client' },
+        { id: 'app', label: 'Pantry app', detail: 'Laravel', x: 360, y: 280, kind: 'service' },
+        { id: 'db', label: 'MySQL', detail: 'Stock, slots', x: 620, y: 280, kind: 'store' },
+        { id: 'families', label: 'Families', detail: 'Book a slot', x: 880, y: 150, kind: 'client' },
+        { id: 'packing', label: 'Packing list', detail: 'Per pickup day', x: 880, y: 410, kind: 'edge' },
+      ],
+      edges: [
+        { from: 'donors', to: 'app', label: 'log' },
+        { from: 'admin', to: 'app', label: 'manage' },
+        { from: 'app', to: 'db' },
+        { from: 'db', to: 'families', label: 'slots' },
+        { from: 'db', to: 'packing', label: 'daily' },
+      ],
+      notes: [
+        {
+          title: 'Stock data',
+          body: 'Every donation becomes stock lines per product and expiry date. The oldest items are packed first, and the admin marks a product orange when it drops below the level the food bank set.',
+        },
+        {
+          title: 'Pickup planning',
+          body: 'Families pick a 15-minute slot on their phone. Each slot holds four families, so the line outside disappears and volunteers know how many bags to pack per hour.',
+        },
+        {
+          title: 'Admin panel',
+          body: 'The panel covers what volunteers do in a day: log donations, fix stock, check families in and print the packing list. Every screen does one task, so a new volunteer can use it without training.',
+        },
+      ],
+    },
+    decisions: [
+      {
+        title: 'Laravel for a three-day build',
+        body: 'Laravel gave us login, migrations and an admin layout on the first evening, so the three days went into the parts the food bank needed.',
+      },
+      {
+        title: 'Pickup slots first',
+        body: 'The line outside was the problem families felt most. We built booking first and left reports for after the hackathon.',
+      },
+    ],
+    challenges: [
+      {
+        title: 'Changing requirements on day two',
+        body: 'Halfway through, the food bank asked us to track expiry dates, which changed the stock tables. Because every model had its CRUD in one place, the change took an afternoon.',
+      },
+      {
+        title: 'An empty demo',
+        body: 'An app with no data is hard to pitch. I wrote seed data for a realistic week of donations and bookings, which made the demo easy to follow.',
+      },
+    ],
+    results: [
+      { value: '3d', label: 'From idea to working demo' },
+      { value: '15min', label: 'Pickup slots' },
+      { value: '40', label: 'Families in the demo week' },
+      { value: '0', label: 'Paper lists on pickup day' },
+    ],
+    images: [
+      { alt: 'Pantry admin panel with stock warnings', caption: 'Admin panel' },
+      { alt: 'Pickup slot booking on a phone', caption: 'Slot booking' },
+      { alt: 'Daily packing list', caption: 'Packing list' },
+    ],
+    hue: 130,
   },
 ];
 

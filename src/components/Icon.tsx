@@ -94,10 +94,10 @@ export type Glyph = keyof typeof GLYPHS;
 const KEYWORDS: [RegExp, Glyph][] = [
   [/encrypt|key|secur|auth/i, 'lock'],
   [/voice|audio/i, 'mic'],
-  [/presence|workspace/i, 'users'],
+  [/presence|workspace|member|sign-up|waitlist/i, 'users'],
   [/chat|message|\bdms?\b/i, 'chat'],
   [/ingest|collect|upload/i, 'ingest'],
-  [/model|forecast|predict|risk|anomal|learn/i, 'spark'],
+  [/model|forecast|predict|risk|anomal|learn|suggest/i, 'spark'],
   [/transcod|build|runner|render|device/i, 'cpu'],
   [/player|frontend|client/i, 'monitor'],
   [/deliver|rout|gateway|cdn|\bedge|\bmap\b|lora/i, 'globe'],
