@@ -86,6 +86,21 @@ const BY_NAME: Record<string, Tech> = Object.fromEntries([
 // Undefined for technologies without a logo; callers show a lettered fallback.
 export const techLogo = (name: string): Tech | undefined => BY_NAME[ALIASES[name] ?? name];
 
+// Everything on the Stack page, grouped. Also feeds the hero tiles and the footer's falling logos.
+export const STACK_GROUPS = [
+  { name: 'Frontend', items: ['React', 'TypeScript', 'Tailwind CSS', 'Angular'] },
+  { name: 'Backend', items: ['Go', 'Node.js', 'Python', 'PHP'] },
+  { name: 'Data', items: ['PostgreSQL', 'MySQL', 'SQLite', 'MongoDB', 'Redis', 'Kafka'] },
+  { name: 'Infrastructure', items: ['Docker', 'Kubernetes', 'Linux', 'Caddy', 'Prometheus', 'Grafana'] },
+  { name: 'Tools', items: ['Git', 'Figma', 'Playwright'] },
+  { name: 'AI Coding', items: ['Claude Code', 'Subagents', 'Skills', 'MCP'] },
+  { name: 'Bonus', items: ['HTML', 'CSS', 'JavaScript', 'Laravel'] },
+];
+
+// The hero's two tiles, alternating through every listed tool that has a logo.
+const withLogo = STACK_GROUPS.flatMap(g => g.items).flatMap(name => techLogo(name) ?? []);
+export const TILE_SETS: Tech[][] = [withLogo.filter((_, i) => i % 2 === 0), withLogo.filter((_, i) => i % 2 === 1)];
+
 // Official site or reference docs for every tool and concept named on the site.
 const URLS: Record<string, string> = {
   BM25: 'https://en.wikipedia.org/wiki/Okapi_BM25',

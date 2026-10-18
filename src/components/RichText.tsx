@@ -1,6 +1,5 @@
 import { Fragment, useEffect, useRef, useState } from 'react';
 import { techUrl } from '../data/tech';
-import TechIcon from './TechIcon';
 
 const NUM = '(?:one|two|three|four|five|ten|fifteen|thirty|a few)';
 const UNIT = '(?:seconds?|minutes?|hours?|days?|weeks?|months?|times)';
@@ -10,7 +9,7 @@ const FIGURE = `\\d+(?:[.,]\\d+)*(?:ms|s|x|%|k|p|MB|GB)?(?:\\s${UNIT})?(?!\\w|\\
 const escape = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 // Body copy that comes alive on scroll: figures get a marker underline that draws in, and the tools named in
-// `mentions` become inline links with their logo.
+// `mentions` become inline links.
 export default function RichText({ text, mentions = [] }: { text: string; mentions?: string[] }) {
   const ref = useRef<HTMLSpanElement>(null);
   const [seen, setSeen] = useState(false);
@@ -46,9 +45,8 @@ export default function RichText({ text, mentions = [] }: { text: string; mentio
               href={techUrl(part)}
               target="_blank"
               rel="noopener noreferrer"
-              className="mention inline-flex items-baseline gap-[0.25em] font-medium text-ink"
+              className="mention font-medium text-ink"
             >
-              <TechIcon name={part} variant="mono" className="h-[0.8em] w-[0.8em] self-center" />
               {part}
             </a>
           );

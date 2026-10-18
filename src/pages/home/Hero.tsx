@@ -4,7 +4,7 @@ import DecryptedText from '../../components/reactbits/DecryptedText';
 import GradientASCII from '../../components/reactbits/GradientASCII';
 import Ribbons from '../../components/reactbits/Ribbons';
 import StackTile from '../../components/StackTile';
-import { STACK } from '../../data/stack';
+import { TILE_SETS } from '../../data/tech';
 
 // Scroll hint at the bottom of the hero, shown only near the top of the page.
 function ScrollCue() {
@@ -89,10 +89,10 @@ export default function Hero({ dark }: { dark: boolean }) {
         {/* Size tracks viewport width so each line, tiles included, stays on one row. */}
         <h1 className="font-display text-[min(9.5vw,6rem)] font-normal leading-[1.05]">
           <span className="block whitespace-nowrap">
-            I build <StackTile items={STACK[0]} /> things
+            I build <StackTile items={TILE_SETS[0]} /> things
           </span>
           <span className="block whitespace-nowrap">
-            for the <StackTile items={STACK[1]} delay={2500} /> web
+            for the <StackTile items={TILE_SETS[1]} delay={2500} /> web
           </span>
         </h1>
         <p

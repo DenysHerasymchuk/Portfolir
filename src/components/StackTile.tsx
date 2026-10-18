@@ -37,7 +37,10 @@ export default function StackTile({ items, delay = 0 }: { items: Tech[]; delay?:
         className="absolute inset-0 rounded-[inherit] shadow-[0_0.05em_0.18em_rgb(92_74_54/0.3)] motion-safe:animate-[tile-pop_420ms_cubic-bezier(0.34,1.56,0.64,1)]"
         style={{ background: tech.bg }}
       >
-        <span className="absolute inset-[22%]" style={{ backgroundColor: tech.fg, mask, WebkitMask: mask }} />
+        <span
+          className="absolute inset-[22%]"
+          style={tech.color ? { background: mask } : { backgroundColor: tech.fg, mask, WebkitMask: mask }}
+        />
       </span>
     </button>
   );

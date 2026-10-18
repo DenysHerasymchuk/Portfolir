@@ -1,16 +1,6 @@
 import TechIcon from '../components/TechIcon';
-import { techUrl } from '../data/tech';
+import { STACK_GROUPS, techUrl } from '../data/tech';
 import { PROJECTS } from '../data/projects';
-
-const GROUPS = [
-  { name: 'Frontend', items: ['React', 'TypeScript', 'Tailwind CSS', 'Angular'] },
-  { name: 'Backend', items: ['Go', 'Node.js', 'Python', 'PHP'] },
-  { name: 'Data', items: ['PostgreSQL', 'MySQL', 'SQLite', 'MongoDB', 'Redis', 'Kafka'] },
-  { name: 'Infrastructure', items: ['Docker', 'Kubernetes', 'Linux', 'Caddy', 'Prometheus', 'Grafana'] },
-  { name: 'Tools', items: ['Git', 'Figma', 'Playwright'] },
-  { name: 'AI Coding', items: ['Claude Code', 'Subagents', 'Skills', 'MCP'] },
-  { name: 'Bonus', items: ['HTML', 'CSS', 'JavaScript', 'Laravel'] },
-];
 
 const usedIn = (tech: string) => PROJECTS.filter(p => p.stack.some(g => g.items.includes(tech)));
 
@@ -26,7 +16,7 @@ export default function Stack() {
       </header>
 
       <div className="mt-20 grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
-        {GROUPS.map(group => (
+        {STACK_GROUPS.map(group => (
           <div key={group.name} className="border-t border-ink/15 pt-6">
             <h2 className="text-xl font-semibold">{group.name}</h2>
             <ul className="mt-5 space-y-3">

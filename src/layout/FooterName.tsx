@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { STACK } from '../data/stack';
+import { TILE_SETS } from '../data/tech';
 
 const TILE = 56;
 const GRAVITY = 2200; // px/s²
@@ -173,7 +173,7 @@ export default function FooterName() {
 
     const box = layer.getBoundingClientRect();
     const from = letter.getBoundingClientRect();
-    const techs = STACK.flat();
+    const techs = TILE_SETS.flat();
     for (let i = 0; i < 4; i++) {
       const tech = techs[Math.floor(Math.random() * techs.length)];
       const el = document.createElement('div');
@@ -182,8 +182,11 @@ export default function FooterName() {
       el.style.background = tech.bg;
       const logo = document.createElement('div');
       logo.className = 'absolute inset-[22%]';
-      logo.style.backgroundColor = tech.fg;
-      logo.style.mask = logo.style.webkitMask = `url(${tech.icon}) center / contain no-repeat`;
+      if (tech.color) logo.style.background = `url(${tech.icon}) center / contain no-repeat`;
+      else {
+        logo.style.backgroundColor = tech.fg;
+        logo.style.mask = logo.style.webkitMask = `url(${tech.icon}) center / contain no-repeat`;
+      }
       el.append(logo);
       layer.append(el);
       tiles.current.push({
