@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import { projectBySlug } from '../data/projects';
 import { CREDENTIALS } from '../data/site';
 import { ArrowIcon } from './PrimaryButton';
+import ProjectImage from './ProjectImage';
 
 // Dated timeline of work, team programmes and studies, each linking to the project it produced. The line draws down and the entries fade up in turn
 // the first time the list scrolls into view.
@@ -57,10 +58,20 @@ export default function Credentials({ className = '' }: { className?: string }) 
                 <Link
                   to={`/work/${project.slug}`}
                   viewTransition
-                  className="group/btn mt-4 inline-flex items-center gap-2 font-medium"
+                  className="group/btn mt-5 block max-w-md rounded-2xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-haze"
                 >
-                  <span className="link-underline pb-0.5">See the project: {project.name}</span>
-                  <ArrowIcon />
+                  <div className="overflow-hidden rounded-2xl">
+                    <ProjectImage
+                      name={project.name}
+                      caption={project.images[0].caption}
+                      hue={project.hue}
+                      className="aspect-[16/9] transition-transform duration-500 ease-out group-hover/btn:scale-[1.03] motion-reduce:transition-none"
+                    />
+                  </div>
+                  <span className="mt-3 inline-flex items-center gap-2 font-medium">
+                    <span className="link-underline pb-0.5">See the project: {project.name}</span>
+                    <ArrowIcon />
+                  </span>
                 </Link>
               )}
             </div>
