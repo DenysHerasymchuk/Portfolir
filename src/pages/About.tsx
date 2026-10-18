@@ -29,7 +29,7 @@ const HOW_I_WORK = [
       </>
     ),
     title: 'I draw the system before I write it',
-    body: 'I model a project in StarUML before any code: a use case diagram for what people can do, a class diagram for the structure, and sequence diagrams for how the parts talk at runtime.\nI rank features with MoSCoW, write the main flows out step by step, and settle close calls with a weighted decision matrix.',
+    body: 'I model a project in StarUML before any code: a use case diagram for what people can do, a class diagram for the structure, and sequence diagrams for how the parts talk at runtime.\nI rank features with MoSCoW and write the main flows out step by step. When two options are close, a weighted decision matrix decides.',
   },
   {
     icon: (
@@ -39,7 +39,7 @@ const HOW_I_WORK = [
       </>
     ),
     title: 'I ship small and often',
-    body: 'I prototype screens in Figma, prepare images in Photoshop, and click through the flow before building it.\nThe first release is an MVP with only the must-haves, so people can try it early.\nPull requests stay small, which makes them easy to review and easy to undo.',
+    body: 'I prototype screens in Figma, with images from Photoshop, and click through the flow before I build it.\nThe first release is an MVP with only the must-haves, so people can try it early.\nPull requests stay small, which makes them easy to review and easy to undo.',
   },
   {
     icon: <path d="M4 20V10M10 20V4M16 20v-7M21 20H3" />,
@@ -54,7 +54,7 @@ const HOW_I_WORK = [
       </>
     ),
     title: 'I sweat the small details',
-    body: 'Empty states, error messages, focus rings, a loading state that does not jump. People notice when they are missing.\nEvery page works with a keyboard and a screen reader, respects reduced motion, and fits a small phone. I check contrast against WCAG and loading speed with Lighthouse.',
+    body: 'Empty states, error messages, focus rings, a loading state that does not jump. People notice when they are missing.\nEvery page works with a keyboard and a screen reader and fits a small phone, with less motion for people who ask for it. I check contrast against WCAG and loading speed with Lighthouse.',
   },
 ];
 

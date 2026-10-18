@@ -96,7 +96,7 @@ export const PROJECTS: Project[] = [
         },
         {
           title: 'Alerts',
-          body: 'Thresholds are set per street from the height of the lowest doorways, not one number for the whole river. Alerts include the expected peak time and height, and they are only sent again when the forecast changes by more than 20 centimetres, so people do not learn to ignore them.',
+          body: 'Each street has its own threshold, based on the height of its lowest doorways. Alerts include the expected peak time and height, and they are only sent again when the forecast changes by more than 20 centimetres, so people do not learn to ignore them.',
         },
       ],
     },
@@ -147,7 +147,7 @@ export const PROJECTS: Project[] = [
     role: 'Solo project. Data pipeline, models, map and API.',
     duration: '4 months',
     overview: [
-      'Belgian trains share a dense network, so one late train in Brussels can delay others an hour later in Ghent or Liège. Spoorzicht predicts those delays per train and per station, and answers the question people actually have on the platform: will I make my connection?',
+      'Belgian trains share a dense network, so one late train in Brussels can delay others an hour later in Ghent or Liège. Spoorzicht predicts those delays per train and per station, and answers the question people have on the platform: will I make my connection?',
       'iRail publishes live departures and delays for the whole NMBS/SNCB network as open data. I poll it every 30 seconds, store years of history, and combine it with weather and calendar data such as school holidays and strikes. Python models trained on that history predict the delay at each upcoming stop.',
       'The web app shows a live map where delays spread along the lines in real time. Pick two trains and it gives the chance of catching the connection, with the reason in plain words, such as "this train usually loses three minutes before Brussels-North".',
     ],
@@ -248,7 +248,7 @@ export const PROJECTS: Project[] = [
     overview: [
       'Since 2023, households in Flanders pay part of their electricity bill based on their highest 15-minute peak of the month. Charging the car while the oven and heat pump are on can set an expensive peak in one evening. Gridflex is an agent that sits in the house and stops that from happening.',
       'A small Go program on a Raspberry Pi reads the digital meter every second through its P1 port and talks to the EV charger, heat pump and home battery over the local network. It forecasts solar output and household use for the next day, plans when each flexible device should run, and adjusts the plan live if someone turns on the oven.',
-      'The Angular app shows the house in real time, the current quarter hour, and how much the agent saved this month. A .NET backend stores history, handles accounts and pushes new forecast models to every house.',
+      'The Angular app shows the house live, including the current quarter hour, and how much the agent saved this month. A .NET backend keeps accounts and history and pushes new forecast models to every house.',
     ],
     responsibilities: [
       'Wrote the Go agent that reads the meter and controls the charger, heat pump and battery.',
@@ -346,7 +346,7 @@ export const PROJECTS: Project[] = [
     overview: [
       'A railway switch that fails can stop a whole line, and most failures give small warnings first: a motor that draws a bit more current, a blade that vibrates differently when it moves. Railwatch puts sensors on switches to catch those warnings early, so crews can fix a switch during a planned night shift instead of during rush hour.',
       'Each sensor box records vibration and motor current every time the switch moves, plus the temperature. A small model runs on the box itself and compares each movement with what is normal for that switch. Normal movements are summarised and unusual ones are sent in full, which keeps data costs low across thousands of switches.',
-      'In the backend, Kafka collects events from every switch, a Python model turns them into a risk score, and a dashboard ranks switches by how likely they are to fail in the coming week. Crews see the evidence behind each score, not only a red dot.',
+      'In the backend, Kafka collects events from every switch, a Python model turns them into a risk score, and a dashboard ranks switches by how likely they are to fail in the coming week. Each score comes with the movements that caused it, so crews can check it before they go out.',
     ],
     responsibilities: [
       'Built the Go service on the sensor box that records each switch movement and runs the edge model.',
