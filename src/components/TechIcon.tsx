@@ -17,7 +17,8 @@ export default function TechIcon({
     .split(' ')
     .map(w => w[0])
     .join('')
-    .slice(0, 2);
+    .slice(0, 2)
+    .toUpperCase();
 
   if (variant === 'mono') {
     if (!tech) return null;
