@@ -8,20 +8,7 @@ const GROUPS = [
   { name: 'Data', items: ['PostgreSQL', 'Redis', 'Kafka', 'ClickHouse', 'pgvector'] },
   { name: 'Infrastructure', items: ['Docker', 'Kubernetes', 'Linux', 'Caddy', 'Prometheus', 'Grafana'] },
   { name: 'Tools', items: ['Git', 'Figma', 'Vitest', 'Playwright'] },
-  {
-    name: 'AI Development',
-    items: [
-      'Claude Code',
-      'CLAUDE.md memory',
-      'Plan mode',
-      'Context engineering',
-      'Subagents',
-      'Skills',
-      'Hooks',
-      'MCP servers',
-      'Agent SDK',
-    ],
-  },
+  { name: 'AI Development', items: ['Claude Code', 'Plan mode', 'Context engineering', 'Subagents', 'Skills', 'MCP'] },
 ];
 
 const usedIn = (tech: string) => PROJECTS.filter(p => p.stack.some(g => g.items.includes(tech)));
