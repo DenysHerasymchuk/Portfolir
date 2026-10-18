@@ -24,8 +24,9 @@ export default function About() {
             Applied Sciences in Belgium.
           </p>
           <p>
-            Right now I&apos;m looking for my first junior role on a team that ships often and reviews code with care. I
-            learn fastest by building real things, and I&apos;m happy to start with the small tickets.
+            Right now I&apos;m looking for my first junior role. I pick up a new codebase and stack quickly, ask questions
+            early instead of guessing, and treat code review as the fastest way to get better. Give me a real ticket and
+            I&apos;ll build it, test it and keep you posted along the way.
           </p>
         </div>
         <Link to="/about" viewTransition className="link-underline mt-8 inline-block pb-0.5 text-lg text-ink">
