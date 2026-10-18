@@ -51,7 +51,12 @@ export default function Credentials({ className = '' }: { className?: string }) 
             />
             <p className="text-sm text-haze sm:pt-0.5">{item.date}</p>
             <div className="sm:pl-10">
-              <h3 className="text-xl font-semibold">{item.title}</h3>
+              <h3 className="flex items-center gap-3 text-xl font-semibold">
+                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-ink/10 bg-white p-1.5">
+                  <img src={item.logo} alt="" className="h-full w-full object-contain" />
+                </span>
+                {item.title}
+              </h3>
               <p className="mt-1 text-haze">{item.place}</p>
               <p className="mt-3 max-w-prose leading-relaxed text-ink/80">{item.body}</p>
               {project && (
