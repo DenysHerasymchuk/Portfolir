@@ -46,32 +46,32 @@ export const PROJECTS: Project[] = [
     duration: '5 months',
     overview: [
       'Streamline lets anyone go live from OBS and watch from a browser with about two seconds between the camera and the screen. Most hobby streaming setups sit at ten seconds or more, which kills the back and forth between a streamer and their chat. Getting that number down, while still serving thousands of viewers per stream, was the goal of the whole project.',
-      'The platform has four moving parts. An ingest service accepts RTMP from the streamer, transcoding workers turn one stream into several qualities, the video is delivered as low-latency HLS through a CDN, and a separate chat system pushes messages to every viewer over WebSockets. Viewer counts, follows and chat activity flow into an analytics pipeline that powers a live dashboard for streamers.',
+      'The platform has four moving parts. An ingest service accepts RTMP from the streamer, transcoding workers turn one stream into several qualities, the video is delivered as low-latency HLS through a CDN, and a separate chat system pushes messages to every viewer over WebSockets. Viewer counts, follows and chat activity flow through Kafka into a live dashboard for streamers.',
       'I built it to understand how real video platforms work under load, so every piece is something I could explain in an interview: why the segments are small, why chat is sharded by channel, and what happens when a transcoding worker dies in the middle of a stream.',
     ],
     responsibilities: [
       'Designed the system and wrote the architecture docs before writing code.',
-      'Built the Go ingest and chat services, and the React watch page with an hls.js player.',
+      'Built the Go ingest and chat services, and the React watch page with a low-latency HLS player.',
       'Set up the Kubernetes cluster, autoscaling for transcoders, and the CI pipeline.',
       'Load tested chat with a custom Go client that opens thousands of sockets.',
     ],
     stack: [
-      { layer: 'Frontend', items: ['React', 'TypeScript', 'hls.js', 'Tailwind CSS'] },
-      { layer: 'Backend', items: ['Go', 'FFmpeg', 'WebSockets', 'gRPC'] },
-      { layer: 'Data', items: ['PostgreSQL', 'Redis', 'Kafka', 'ClickHouse'] },
-      { layer: 'Infra', items: ['Kubernetes', 'Docker', 'S3', 'CloudFront', 'Prometheus', 'Grafana'] },
+      { layer: 'Frontend', items: ['React', 'TypeScript', 'Tailwind CSS'] },
+      { layer: 'Backend', items: ['Go', 'Node.js'] },
+      { layer: 'Data', items: ['PostgreSQL', 'Redis', 'Kafka'] },
+      { layer: 'Infra', items: ['Kubernetes', 'Docker', 'Caddy', 'Prometheus', 'Grafana'] },
     ],
     architecture: {
       nodes: [
         { id: 'obs', label: 'OBS', detail: 'Streamer sends RTMP', x: 90, y: 150, kind: 'client' },
         { id: 'ingest', label: 'Ingest', detail: 'Go, RTMP, stream keys', x: 290, y: 150, kind: 'service' },
         { id: 'transcode', label: 'Transcoders', detail: 'FFmpeg on Kubernetes', x: 500, y: 150, kind: 'service' },
-        { id: 'cdn', label: 'Origin + CDN', detail: 'LL-HLS on S3', x: 710, y: 150, kind: 'edge' },
-        { id: 'player', label: 'Watch page', detail: 'React + hls.js', x: 910, y: 280, kind: 'client' },
+        { id: 'cdn', label: 'Origin + CDN', detail: 'LL-HLS via Caddy', x: 710, y: 150, kind: 'edge' },
+        { id: 'player', label: 'Watch page', detail: 'React player', x: 910, y: 280, kind: 'client' },
         { id: 'chat', label: 'Chat gateway', detail: 'Go WebSockets', x: 710, y: 410, kind: 'service' },
         { id: 'redis', label: 'Redis', detail: 'Pub/sub per channel', x: 500, y: 410, kind: 'store' },
         { id: 'kafka', label: 'Kafka', detail: 'Events', x: 290, y: 410, kind: 'queue' },
-        { id: 'clickhouse', label: 'ClickHouse', detail: 'Live stats', x: 90, y: 410, kind: 'store' },
+        { id: 'stats', label: 'Postgres', detail: 'Stats rollups', x: 90, y: 410, kind: 'store' },
       ],
       edges: [
         { from: 'obs', to: 'ingest', label: 'RTMP' },
@@ -81,12 +81,12 @@ export const PROJECTS: Project[] = [
         { from: 'player', to: 'chat', label: 'WebSocket' },
         { from: 'chat', to: 'redis', label: 'fan-out' },
         { from: 'ingest', to: 'kafka', label: 'events' },
-        { from: 'kafka', to: 'clickhouse' },
+        { from: 'kafka', to: 'stats' },
       ],
       notes: [
         {
           title: 'Ingest',
-          body: 'A Go service accepts RTMP connections, checks the stream key against Postgres, and hands the stream to a transcoding worker over gRPC. It holds no video on disk, so it can restart without dropping anyone for more than a second.',
+          body: 'A Go service accepts RTMP connections, checks the stream key against Postgres, and hands the stream to a transcoding worker. It holds no video on disk, so it can restart without dropping anyone for more than a second.',
         },
         {
           title: 'Transcoding',
@@ -94,7 +94,7 @@ export const PROJECTS: Project[] = [
         },
         {
           title: 'Delivery',
-          body: 'Workers write one-second LL-HLS parts to S3. CloudFront serves them with short cache times on playlists and long ones on segments. The player starts close to the live edge and catches up by playing slightly faster when it falls behind.',
+          body: 'Workers write one-second LL-HLS parts to shared storage. Caddy serves them as the origin behind a CDN, with short cache times on playlists and long ones on segments. The player starts close to the live edge and catches up by playing slightly faster when it falls behind.',
         },
         {
           title: 'Chat',
@@ -102,7 +102,7 @@ export const PROJECTS: Project[] = [
         },
         {
           title: 'Analytics',
-          body: 'Gateways and ingest emit events to Kafka. A consumer batches them into ClickHouse, which answers "viewers right now" and "peak viewers this stream" fast enough for a dashboard that refreshes every second.',
+          body: 'Gateways and ingest emit events to Kafka. A Node.js consumer keeps live counters in Redis for "viewers right now" and writes per-minute rollups to Postgres for history, so the streamer dashboard refreshes every second.',
         },
       ],
     },
@@ -117,7 +117,7 @@ export const PROJECTS: Project[] = [
       },
       {
         title: 'Kafka between services and analytics',
-        body: 'Writing stats straight to the database would tie chat latency to database latency. With Kafka in between, chat stays fast even if ClickHouse is slow or down for maintenance.',
+        body: 'Writing stats straight to the database would tie chat latency to database latency. With Kafka in between, chat stays fast even if the stats database is slow or down for maintenance.',
       },
     ],
     challenges: [
@@ -148,34 +148,34 @@ export const PROJECTS: Project[] = [
     name: 'Hatch',
     tagline: 'Push to Git and get a live preview URL in under a minute, on your own servers.',
     summary:
-      'A self-hosted deployment platform in the spirit of Vercel: every branch gets its own preview, builds run in isolated microVMs, and logs stream into the browser as they happen.',
+      'A self-hosted deployment platform in the spirit of Vercel: every branch gets its own preview, builds run in locked-down containers, and logs stream into the browser as they happen.',
     year: '2026',
     role: 'Solo project. Platform design, build system, dashboard.',
     duration: '4 months',
     overview: [
       'Hatch is a deployment platform you run yourself. Connect a GitHub repository, and every push builds the project and publishes it at its own URL, like feature-login.hatch.example.com. Merging to main promotes the build to production with no downtime.',
-      'The hard part is running untrusted build scripts safely and quickly. Hatch runs each build in a Firecracker microVM that boots in under a second, has no network access beyond a package mirror, and is thrown away afterwards. A layer cache keyed on the lockfile makes repeat builds much faster.',
+      'The hard part is running untrusted build scripts safely and quickly. Hatch runs each build in a fresh Docker container with no network access beyond a package mirror, strict CPU and memory limits, and no way back into the host. It is thrown away afterwards. A layer cache keyed on the lockfile makes repeat builds much faster.',
       'The dashboard shows every deployment, streams build logs live, and lets you roll production back to any earlier build with one click.',
     ],
     responsibilities: [
       'Designed the build pipeline, isolation model and routing layer.',
-      'Wrote the Go control plane and the build runner around Firecracker.',
+      'Wrote the Go control plane and the Docker build runner, with Bash scripts for each build step.',
       'Built the React dashboard with live log streaming over server-sent events.',
       'Wrote the GitHub App integration for webhooks and commit status checks.',
     ],
     stack: [
-      { layer: 'Frontend', items: ['React', 'TypeScript', 'Tailwind CSS', 'Server-sent events'] },
-      { layer: 'Backend', items: ['Go', 'Firecracker', 'GitHub Apps API'] },
-      { layer: 'Data', items: ['PostgreSQL', 'Redis', 'MinIO'] },
-      { layer: 'Infra', items: ['Caddy', 'Docker', 'Linux', 'Prometheus'] },
+      { layer: 'Frontend', items: ['React', 'TypeScript', 'Tailwind CSS'] },
+      { layer: 'Backend', items: ['Go', 'GitHub', 'Bash'] },
+      { layer: 'Data', items: ['PostgreSQL', 'Redis'] },
+      { layer: 'Infra', items: ['Docker', 'Caddy', 'Linux', 'Prometheus'] },
     ],
     architecture: {
       nodes: [
         { id: 'github', label: 'GitHub', detail: 'Push webhook', x: 90, y: 140, kind: 'client' },
         { id: 'api', label: 'Control plane', detail: 'Go API', x: 300, y: 140, kind: 'service' },
         { id: 'queue', label: 'Build queue', detail: 'Redis streams', x: 500, y: 140, kind: 'queue' },
-        { id: 'runner', label: 'Build runners', detail: 'Firecracker microVMs', x: 700, y: 140, kind: 'service' },
-        { id: 'artifacts', label: 'Artifacts', detail: 'MinIO', x: 900, y: 140, kind: 'store' },
+        { id: 'runner', label: 'Build runners', detail: 'Docker containers', x: 700, y: 140, kind: 'service' },
+        { id: 'artifacts', label: 'Artifacts', detail: 'Shared volume', x: 900, y: 140, kind: 'store' },
         { id: 'db', label: 'Postgres', detail: 'Projects, deploys', x: 300, y: 400, kind: 'store' },
         { id: 'dash', label: 'Dashboard', detail: 'React, SSE logs', x: 90, y: 400, kind: 'client' },
         { id: 'router', label: 'Edge router', detail: 'Caddy, TLS', x: 700, y: 400, kind: 'edge' },
@@ -198,7 +198,7 @@ export const PROJECTS: Project[] = [
         },
         {
           title: 'Build runners',
-          body: 'Runners pull jobs and start a Firecracker microVM from a prepared root filesystem. The project is built inside the VM with no outside network except a package mirror. Logs are piped back line by line so the dashboard can show them live.',
+          body: 'Runners pull jobs and start a container from a prepared build image. The project is built inside it by a Bash script, with no outside network except a package mirror. Logs are piped back line by line so the dashboard can show them live.',
         },
         {
           title: 'Caching',
@@ -206,14 +206,14 @@ export const PROJECTS: Project[] = [
         },
         {
           title: 'Routing',
-          body: 'Caddy handles TLS with automatic certificates and maps each subdomain to a build output in MinIO. Promoting to production only changes which build the main domain points at, so it is instant and easy to undo.',
+          body: 'Caddy handles TLS with automatic certificates and maps each subdomain to a build output on the artifact volume. Promoting to production only changes which build the main domain points at, so it is instant and easy to undo.',
         },
       ],
     },
     decisions: [
       {
-        title: 'Firecracker over Docker for builds',
-        body: 'Containers share the host kernel, so a malicious build script has a much easier path out. Firecracker gives each build its own small VM and still boots in well under a second.',
+        title: 'Throwaway containers for builds',
+        body: 'Build scripts are untrusted code. Each one runs in a new container as a non-root user, with dropped capabilities, a read-only base image and no outside network, and the container is deleted when the build ends.',
       },
       {
         title: 'Server-sent events for logs',
@@ -237,7 +237,7 @@ export const PROJECTS: Project[] = [
     results: [
       { value: '40s', label: 'Typical repeat build' },
       { value: '<1s', label: 'Rollback to any build' },
-      { value: '250ms', label: 'MicroVM boot' },
+      { value: '1.2s', label: 'Build container start' },
       { value: '0', label: 'Downtime per deploy' },
     ],
     images: [
@@ -263,21 +263,21 @@ export const PROJECTS: Project[] = [
     ],
     responsibilities: [
       'Designed the event model and the double-entry rules.',
-      'Built the sync layer on top of Yjs CRDTs with a Node.js relay server.',
-      'Wrote the React app, including offline storage in IndexedDB.',
-      'Wrote property-based tests that check the books still balance after random edits.',
+      'Built the CRDT sync layer and the .NET relay server in C#.',
+      'Wrote the Angular app, including offline storage in IndexedDB.',
+      'Wrote tests that apply thousands of random edits and check the books still balance, plus Playwright tests for the main flows.',
     ],
     stack: [
-      { layer: 'Frontend', items: ['React', 'TypeScript', 'Yjs', 'IndexedDB'] },
-      { layer: 'Backend', items: ['Node.js', 'WebSockets', 'Zod'] },
-      { layer: 'Data', items: ['PostgreSQL', 'Event sourcing'] },
-      { layer: 'Testing', items: ['Vitest', 'fast-check', 'Playwright'] },
+      { layer: 'Frontend', items: ['Angular', 'TypeScript', 'Tailwind CSS'] },
+      { layer: 'Backend', items: ['.NET', 'C#'] },
+      { layer: 'Data', items: ['PostgreSQL'] },
+      { layer: 'Testing', items: ['Playwright', 'GitHub'] },
     ],
     architecture: {
       nodes: [
-        { id: 'clientA', label: 'Browser A', detail: 'Yjs doc + IndexedDB', x: 100, y: 140, kind: 'client' },
+        { id: 'clientA', label: 'Browser A', detail: 'CRDT doc + IndexedDB', x: 100, y: 140, kind: 'client' },
         { id: 'clientB', label: 'Browser B', detail: 'Offline edits', x: 100, y: 400, kind: 'client' },
-        { id: 'relay', label: 'Sync relay', detail: 'Node.js WebSockets', x: 360, y: 270, kind: 'service' },
+        { id: 'relay', label: 'Sync relay', detail: '.NET WebSockets', x: 360, y: 270, kind: 'service' },
         { id: 'rules', label: 'Ledger rules', detail: 'Double entry checks', x: 600, y: 140, kind: 'service' },
         { id: 'events', label: 'Event store', detail: 'Postgres, append only', x: 600, y: 400, kind: 'store' },
         { id: 'views', label: 'Projections', detail: 'Balances, reports', x: 860, y: 270, kind: 'store' },
@@ -293,11 +293,11 @@ export const PROJECTS: Project[] = [
       notes: [
         {
           title: 'Local first',
-          body: 'Each browser keeps its own copy of the ledger as a Yjs document stored in IndexedDB. The app reads and writes locally, so it is instant and works with no connection at all.',
+          body: 'Each browser keeps its own copy of the ledger as a CRDT document stored in IndexedDB. The app reads and writes locally, so it is instant and works with no connection at all.',
         },
         {
           title: 'Sync relay',
-          body: 'A Node.js server relays Yjs updates between everyone in the same workspace. Because CRDT updates merge in any order, two people editing different lines offline end up with the same result when they reconnect.',
+          body: 'A .NET server relays CRDT updates between everyone in the same workspace. Because CRDT updates merge in any order, two people editing different lines offline end up with the same result when they reconnect.',
         },
         {
           title: 'Ledger rules',
@@ -358,15 +358,15 @@ export const PROJECTS: Project[] = [
     ],
     responsibilities: [
       'Built the realtime gateway and presence service in Go.',
-      'Set up mediasoup for voice rooms and wrote the signaling.',
+      'Set up the Node.js voice server (mediasoup) and wrote the signaling.',
       'Implemented end-to-end encryption for DMs with the Web Crypto API.',
       'Built the React client, including notifications and message history.',
     ],
     stack: [
-      { layer: 'Frontend', items: ['React', 'TypeScript', 'WebRTC', 'Web Crypto API'] },
-      { layer: 'Backend', items: ['Go', 'Node.js', 'mediasoup', 'WebSockets'] },
-      { layer: 'Data', items: ['PostgreSQL', 'Redis', 'S3'] },
-      { layer: 'Infra', items: ['Docker', 'Kubernetes', 'coturn'] },
+      { layer: 'Frontend', items: ['React', 'TypeScript', 'Tailwind CSS'] },
+      { layer: 'Backend', items: ['Go', 'Node.js'] },
+      { layer: 'Data', items: ['PostgreSQL', 'MongoDB', 'Redis'] },
+      { layer: 'Infra', items: ['Docker', 'Kubernetes', 'Linux'] },
     ],
     architecture: {
       nodes: [
@@ -376,7 +376,7 @@ export const PROJECTS: Project[] = [
         { id: 'redis', label: 'Redis', detail: 'Pub/sub, presence', x: 820, y: 140, kind: 'store' },
         { id: 'sfu', label: 'Voice SFU', detail: 'mediasoup', x: 340, y: 410, kind: 'service' },
         { id: 'turn', label: 'TURN', detail: 'coturn relay', x: 580, y: 410, kind: 'edge' },
-        { id: 'db', label: 'Postgres', detail: 'Messages, servers', x: 820, y: 410, kind: 'store' },
+        { id: 'db', label: 'MongoDB', detail: 'Message history', x: 820, y: 410, kind: 'store' },
       ],
       edges: [
         { from: 'client', to: 'gateway', label: 'events' },
@@ -389,7 +389,7 @@ export const PROJECTS: Project[] = [
       notes: [
         {
           title: 'Gateway',
-          body: 'Each client keeps one WebSocket open to a gateway. Messages, typing indicators and member updates all travel over it. Gateways publish to Redis so a message reaches members connected to any gateway.',
+          body: 'Each client keeps one WebSocket open to a gateway. Messages, typing indicators and member updates all travel over it. Gateways publish to Redis so a message reaches members connected to any gateway, and store it in MongoDB. Accounts and servers live in Postgres.',
         },
         {
           title: 'Presence',
@@ -397,7 +397,7 @@ export const PROJECTS: Project[] = [
         },
         {
           title: 'Voice',
-          body: 'mediasoup runs the voice rooms. The gateway handles signaling, and the client connects straight to the SFU. When a network blocks direct connections, traffic goes through a coturn TURN server.',
+          body: 'A Node.js media server built on mediasoup runs the voice rooms. The gateway handles signaling, and the client connects straight to the SFU. When a network blocks direct connections, traffic goes through a coturn TURN server.',
         },
         {
           title: 'Encrypted DMs',
@@ -443,26 +443,26 @@ export const PROJECTS: Project[] = [
     name: 'Pulse',
     tagline: 'Logs, metrics and traces from every service in one place, with alerts that point at the cause.',
     summary:
-      'A self-hosted observability platform: services send OpenTelemetry data, it lands in ClickHouse, and a web UI shows traces, dashboards and alerts.',
+      'A self-hosted tracing and logging platform: services send OpenTelemetry data, it lands in Postgres, and it links up with Prometheus metrics and Grafana dashboards.',
     year: '2025',
     role: 'Solo project. Ingest pipeline, storage schema, UI.',
     duration: '3 months',
     overview: [
-      'When something breaks in a system with many services, you need to answer two questions fast: what is broken, and why. Pulse collects logs, metrics and traces from every service through OpenTelemetry and keeps them together, so one click takes you from a red graph to the exact slow request and the log lines it produced.',
-      'The storage is ClickHouse, which compresses this kind of data very well and answers questions over millions of rows in milliseconds. Data is kept at full detail for a week and rolled up into summaries after that.',
+      'When something breaks in a system with many services, you need to answer two questions fast: what is broken, and why. Pulse collects logs and traces from every service through OpenTelemetry and links them to the Prometheus metrics you already have, so one click takes you from a red Grafana graph to the exact slow request and the log lines it produced.',
+      'The storage is PostgreSQL with tables partitioned by day. Recent days stay fast to query, and dropping an old partition deletes a whole day at once. Data is kept at full detail for a week and rolled up into summaries after that.',
       'Alerts are written as queries with thresholds. When one fires, the alert links straight to the traces from the same time window, so the person on call starts with evidence instead of a guess.',
     ],
     responsibilities: [
-      'Designed the ClickHouse schema and the retention rules.',
+      'Designed the partitioned Postgres schema and the retention rules.',
       'Built the Go ingest service and the alert evaluator.',
-      'Built the React UI, including the trace waterfall view.',
+      'Built the React UI, including the trace waterfall view, and Grafana links into it.',
       'Wrote a demo app with several services to generate realistic traffic.',
     ],
     stack: [
-      { layer: 'Frontend', items: ['React', 'TypeScript', 'D3', 'Tailwind CSS'] },
-      { layer: 'Backend', items: ['Go', 'OpenTelemetry', 'gRPC'] },
-      { layer: 'Data', items: ['ClickHouse', 'Kafka', 'PostgreSQL'] },
-      { layer: 'Infra', items: ['Docker', 'Kubernetes', 'Helm'] },
+      { layer: 'Frontend', items: ['React', 'TypeScript', 'Tailwind CSS'] },
+      { layer: 'Backend', items: ['Go'] },
+      { layer: 'Data', items: ['PostgreSQL', 'Kafka'] },
+      { layer: 'Infra', items: ['Docker', 'Kubernetes', 'Prometheus', 'Grafana'] },
     ],
     architecture: {
       nodes: [
@@ -470,9 +470,9 @@ export const PROJECTS: Project[] = [
         { id: 'collector', label: 'Collector', detail: 'OTel Collector', x: 290, y: 270, kind: 'edge' },
         { id: 'ingest', label: 'Ingest', detail: 'Go, batching', x: 480, y: 140, kind: 'service' },
         { id: 'kafka', label: 'Kafka', detail: 'Buffer', x: 480, y: 400, kind: 'queue' },
-        { id: 'ch', label: 'ClickHouse', detail: 'Logs, metrics, traces', x: 690, y: 270, kind: 'store' },
+        { id: 'ch', label: 'Postgres', detail: 'Logs, traces', x: 690, y: 270, kind: 'store' },
         { id: 'alerts', label: 'Alerts', detail: 'Rule evaluator', x: 900, y: 140, kind: 'service' },
-        { id: 'ui', label: 'Pulse UI', detail: 'React, D3', x: 900, y: 400, kind: 'client' },
+        { id: 'ui', label: 'Pulse UI', detail: 'React, Grafana', x: 900, y: 400, kind: 'client' },
       ],
       edges: [
         { from: 'apps', to: 'collector', label: 'OTLP' },
@@ -489,11 +489,11 @@ export const PROJECTS: Project[] = [
         },
         {
           title: 'Ingest',
-          body: 'The Go ingest service groups incoming data into large batches, because ClickHouse is fast with big inserts and slow with many tiny ones. Kafka sits in between so a ClickHouse restart never loses data.',
+          body: 'The Go ingest service groups incoming data into large batches and writes them with COPY, which is far faster than one insert per row. Kafka sits in between so a database restart never loses data.',
         },
         {
           title: 'Storage',
-          body: 'Logs, metrics and traces live in separate ClickHouse tables that share a trace ID and timestamp. That shared key is what makes jumping from a graph to a trace to its logs possible.',
+          body: 'Logs and traces live in separate Postgres tables that share a trace ID and timestamp, and Prometheus metrics carry the same service labels. That shared key is what makes jumping from a graph to a trace to its logs possible.',
         },
         {
           title: 'Alerts',
@@ -503,8 +503,8 @@ export const PROJECTS: Project[] = [
     },
     decisions: [
       {
-        title: 'ClickHouse for all three signals',
-        body: 'Separate tools for logs, metrics and traces is the usual setup, but it makes linking them painful. One columnar store kept the links simple and was cheap to run.',
+        title: 'Postgres instead of a specialised store',
+        body: 'A dedicated log database would be faster at huge scale, but Postgres with daily partitions handled my load fine, and it was one less system to learn and run.',
       },
       {
         title: 'OpenTelemetry instead of a custom agent',
@@ -514,7 +514,7 @@ export const PROJECTS: Project[] = [
     challenges: [
       {
         title: 'Too many small inserts',
-        body: 'Early on, every request became its own insert and ClickHouse fell behind. Batching for one second or 10,000 rows, whichever came first, fixed it.',
+        body: 'Early on, every request became its own insert and Postgres fell behind. Batching for one second or 10,000 rows, whichever came first, and writing with COPY fixed it.',
       },
       {
         title: 'Rendering huge traces',
@@ -522,9 +522,9 @@ export const PROJECTS: Project[] = [
       },
     ],
     results: [
-      { value: '50k', label: 'Spans per second ingested' },
+      { value: '20k', label: 'Spans per second ingested' },
       { value: '120ms', label: 'p95 dashboard query' },
-      { value: '12x', label: 'Compression on logs' },
+      { value: '7d', label: 'Kept at full detail' },
       { value: '30s', label: 'Alert check interval' },
     ],
     images: [
@@ -549,26 +549,26 @@ export const PROJECTS: Project[] = [
       'Permissions carry over from the source. If you cannot open a document in Google Drive, Atlas will not use it to answer your question.',
     ],
     responsibilities: [
-      'Built the connectors and the incremental sync jobs.',
-      'Designed the chunking, embedding and hybrid ranking.',
+      'Built the connectors and the incremental sync jobs as Laravel queue workers.',
+      'Designed the chunking and hybrid ranking, with a small Python service for embeddings.',
       'Wrote the answer step with citations and a check for unsupported claims.',
-      'Built the React chat UI and an evaluation set to measure answer quality.',
+      'Built the Angular chat UI and an evaluation set to measure answer quality.',
     ],
     stack: [
-      { layer: 'Frontend', items: ['React', 'TypeScript', 'Tailwind CSS'] },
-      { layer: 'Backend', items: ['Python', 'FastAPI', 'Celery'] },
-      { layer: 'Data', items: ['PostgreSQL', 'pgvector', 'Redis'] },
-      { layer: 'AI', items: ['Embeddings API', 'LLM API', 'BM25'] },
+      { layer: 'Frontend', items: ['Angular', 'TypeScript', 'Tailwind CSS'] },
+      { layer: 'Backend', items: ['Laravel', 'PHP', 'Python'] },
+      { layer: 'Data', items: ['PostgreSQL', 'Redis'] },
+      { layer: 'Infra', items: ['Docker', 'Linux', 'Caddy'] },
     ],
     architecture: {
       nodes: [
         { id: 'sources', label: 'Sources', detail: 'Notion, Drive, GitHub', x: 90, y: 140, kind: 'client' },
-        { id: 'sync', label: 'Sync workers', detail: 'Celery jobs', x: 300, y: 140, kind: 'service' },
+        { id: 'sync', label: 'Sync workers', detail: 'Laravel queues', x: 300, y: 140, kind: 'service' },
         { id: 'chunk', label: 'Chunk + embed', detail: 'Python', x: 510, y: 140, kind: 'service' },
         { id: 'pg', label: 'Postgres', detail: 'pgvector + full text', x: 720, y: 140, kind: 'store' },
-        { id: 'ui', label: 'Chat UI', detail: 'React', x: 90, y: 400, kind: 'client' },
-        { id: 'api', label: 'Query API', detail: 'FastAPI', x: 300, y: 400, kind: 'service' },
-        { id: 'rank', label: 'Hybrid ranking', detail: 'BM25 + vectors', x: 510, y: 400, kind: 'service' },
+        { id: 'ui', label: 'Chat UI', detail: 'Angular', x: 90, y: 400, kind: 'client' },
+        { id: 'api', label: 'Query API', detail: 'Laravel', x: 300, y: 400, kind: 'service' },
+        { id: 'rank', label: 'Hybrid ranking', detail: 'Full text + vectors', x: 510, y: 400, kind: 'service' },
         { id: 'llm', label: 'Answer', detail: 'LLM with citations', x: 720, y: 400, kind: 'edge' },
       ],
       edges: [
@@ -583,7 +583,7 @@ export const PROJECTS: Project[] = [
       notes: [
         {
           title: 'Sync',
-          body: 'Celery workers pull changes from each source on a schedule and through webhooks where available. Only changed documents are processed again, so keeping the index fresh stays cheap.',
+          body: 'Laravel queue workers, backed by Redis, pull changes from each source on a schedule and through webhooks where available. Only changed documents are processed again, so keeping the index fresh stays cheap.',
         },
         {
           title: 'Chunking',
