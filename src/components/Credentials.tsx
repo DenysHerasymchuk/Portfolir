@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { CREDENTIALS } from '../data/site';
 
-// Dated timeline of studies and programmes. The line draws down and the entries fade up in turn
+// Dated timeline of work, team programmes and studies. The line draws down and the entries fade up in turn
 // the first time the list scrolls into view.
 export default function Credentials({ className = '' }: { className?: string }) {
   const ref = useRef<HTMLOListElement>(null);

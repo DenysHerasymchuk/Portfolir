@@ -36,21 +36,27 @@ export const FOOTER_COLUMNS = [
 // Real education and programmes, most recent first.
 export const CREDENTIALS = [
   {
+    date: 'Jun 2026 to now',
+    title: 'IT Manager',
+    place: 'Erasmus Student Network Geel, volunteer, hybrid',
+    body: 'I run the IT for the section: the website, member accounts and internal tools used by hundreds of international students. I work with the board to keep event and member information correct, automated event sign-ups and member data exports so volunteers spend less time on lists, and wrote hand-over guides so the tools survive each new board.',
+  },
+  {
     date: 'Apr–May 2026',
-    title: 'International BIP: Data Science & AI',
-    place: 'Thomas More, with students from several European universities',
-    body: 'A Blended Intensive Programme run with partner schools such as Breda University of Applied Sciences. Our international team built a product together and presented it at the final showcase.',
+    title: 'Data Science & AI team, International BIP',
+    place: 'Breda University of Applied Sciences, Netherlands',
+    body: 'Two months in an international team with students from several European universities, on a brief about supporting cafés and community hubs. We built a working platform with Laravel, PostgreSQL and Docker and presented it at the final showcase.',
   },
   {
     date: 'Mar 2026',
     title: 'MORE Week Hackathon',
     place: 'Thomas More University of Applied Sciences',
-    body: 'Three days to plan, build and demo a working product as a team.',
+    body: 'Three days to plan, build and demo a working product as a team. I owned the backend CRUD and the full admin panel.',
   },
   {
     date: 'Sep 2024 to now',
-    title: 'Applied Computer Science',
-    place: 'Thomas More University of Applied Sciences',
-    body: 'Bachelor programme in Application & Software Development. This is where I started building for the web, and I have not stopped since.',
+    title: 'Scrum team projects',
+    place: 'Applied Computer Science, Thomas More University of Applied Sciences (with KU Leuven)',
+    body: 'Projects built in Scrum teams, with Jira for sprint planning, issue tracking and code review. Along the way I work with Linux and shell scripting, Docker, CI/CD in GitHub Actions, SQL databases, C# and .NET, and REST APIs.',
   },
 ];

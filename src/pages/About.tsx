@@ -140,7 +140,7 @@ export default function About() {
       </section>
 
       <section className="mx-auto mt-32 max-w-6xl px-6 sm:px-10">
-        <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">Studies</h2>
+        <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">Experience</h2>
         <Credentials className="mt-10" />
       </section>
     </div>

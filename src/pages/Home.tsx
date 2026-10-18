@@ -15,7 +15,7 @@ export default function Home() {
       <SelectedWork />
 
       <section className="mx-auto max-w-6xl px-6 py-32 sm:px-10">
-        <h2 className="font-display text-6xl leading-none sm:text-7xl">Studies</h2>
+        <h2 className="font-display text-6xl leading-none sm:text-7xl">Experience</h2>
         <Credentials className="mt-14" />
       </section>
 
