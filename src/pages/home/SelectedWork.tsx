@@ -42,7 +42,7 @@ export default function SelectedWork() {
   return (
     <section id="selected-work" className="mx-auto max-w-6xl scroll-mt-24 px-6 pt-32 sm:px-10">
       <div className="flex flex-wrap items-end justify-between gap-6">
-        <h2 className="font-display text-6xl leading-none sm:text-7xl">Selected work</h2>
+        <h2 className="font-display text-5xl leading-none sm:text-7xl">Selected work</h2>
         <Link
           to="/work"
           viewTransition

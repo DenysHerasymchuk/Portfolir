@@ -96,7 +96,7 @@ export default function Hero({ dark }: { dark: boolean }) {
           </span>
         </h1>
         <p
-          className={`pointer-events-auto mx-auto mt-5 max-w-md text-lg sm:text-xl md:max-w-none md:whitespace-nowrap ${
+          className={`pointer-events-auto mx-auto mt-5 hidden max-w-md text-lg sm:block sm:text-xl md:max-w-none md:whitespace-nowrap ${
             dark ? 'text-haze' : 'text-ink/75'
           }`}
         >

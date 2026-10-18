@@ -156,13 +156,17 @@ export default function Project() {
         <p className="mt-4 max-w-2xl text-lg text-ink/75">
           How the pieces connect. Highlighted boxes are services I wrote; the dots show data moving through the system.
         </p>
-        <div className="mt-8 rounded-3xl border border-ink/10 bg-ink/[0.03] p-4 sm:p-8">
-          <ArchitectureDiagram
-            nodes={project.architecture.nodes}
-            edges={project.architecture.edges}
-            hue={project.hue}
-          />
+        {/* On phones the diagram keeps a readable width and scrolls sideways inside its box. */}
+        <div className="mt-8 overflow-x-auto rounded-3xl border border-ink/10 bg-ink/[0.03] p-4 sm:p-8">
+          <div className="min-w-[680px] md:min-w-0">
+            <ArchitectureDiagram
+              nodes={project.architecture.nodes}
+              edges={project.architecture.edges}
+              hue={project.hue}
+            />
+          </div>
         </div>
+        <p className="mt-3 text-sm text-haze md:hidden">Swipe the diagram to see all of it.</p>
         <div className="mt-12 grid gap-x-12 gap-y-10 md:grid-cols-2">
           {project.architecture.notes.map(note => (
             <Topic key={note.title} {...note} fallback="server" mentions={mentions} />

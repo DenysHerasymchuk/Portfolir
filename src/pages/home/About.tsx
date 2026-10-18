@@ -17,7 +17,7 @@ export default function About() {
       />
 
       <div>
-        <h2 className="font-display text-6xl leading-none sm:text-7xl">About me</h2>
+        <h2 className="font-display text-5xl leading-none sm:text-7xl">About me</h2>
         <div className="mt-8 max-w-prose space-y-5 text-lg leading-relaxed text-ink/80">
           <p className="text-ink">
             I&apos;m Denys, a junior full-stack developer studying Applied Computer Science at Thomas More University of
