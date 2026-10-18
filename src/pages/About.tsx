@@ -2,7 +2,22 @@ import { useOutletContext } from 'react-router';
 import Credentials from '../components/Credentials';
 import { Icon } from '../components/Icon';
 import { PrimaryButton } from '../components/PrimaryButton';
+import RichText from '../components/RichText';
 import ScrollVelocity from '../components/ScrollVelocity';
+
+// Terms in "How I work" that link to their docs.
+const HOW_I_WORK_LINKS = [
+  'StarUML',
+  'use case diagram',
+  'class diagram',
+  'sequence diagrams',
+  'MoSCoW',
+  'weighted decision matrix',
+  'Figma',
+  'Photoshop',
+  'Prometheus',
+  'Grafana',
+];
 
 const HOW_I_WORK = [
   {
@@ -114,7 +129,9 @@ export default function About() {
                 <h3 className="text-xl font-semibold">{item.title}</h3>
                 <div className="mt-3 space-y-2 leading-relaxed text-ink/75">
                   {item.body.split('\n').map(line => (
-                    <p key={line}>{line}</p>
+                    <p key={line}>
+                      <RichText text={line} mentions={HOW_I_WORK_LINKS} />
+                    </p>
                   ))}
                 </div>
               </div>

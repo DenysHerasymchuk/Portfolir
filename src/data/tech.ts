@@ -126,6 +126,14 @@ export const TILE_SETS: Tech[][] = [withLogo.filter((_, i) => i % 2 === 0), with
 
 // Official site or reference docs for every tool and concept named on the site.
 const URLS: Record<string, string> = {
+  // How I work (About page)
+  StarUML: 'https://staruml.io',
+  'use case diagram': 'https://en.wikipedia.org/wiki/Use_case_diagram',
+  'class diagram': 'https://en.wikipedia.org/wiki/Class_diagram',
+  'sequence diagrams': 'https://en.wikipedia.org/wiki/Sequence_diagram',
+  MoSCoW: 'https://en.wikipedia.org/wiki/MoSCoW_method',
+  'weighted decision matrix': 'https://en.wikipedia.org/wiki/Decision_matrix',
+  Photoshop: 'https://www.adobe.com/products/photoshop.html',
   BM25: 'https://en.wikipedia.org/wiki/Okapi_BM25',
   Caddy: 'https://caddyserver.com',
   Celery: 'https://docs.celeryq.dev',
