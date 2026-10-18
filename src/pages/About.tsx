@@ -30,7 +30,7 @@ const HOW_I_WORK = [
   {
     icon: <path d="M4 20V10M10 20V4M16 20v-7M21 20H3" />,
     title: 'I measure before I optimise',
-    body: 'Load tests and dashboards tell me where the time goes. Guessing usually points at the wrong place.',
+    body: 'Prometheus collects the metrics and Grafana shows me where the time goes. Guessing usually points at the wrong place.\nA CI/CD pipeline runs the tests and deploys on every push, so problems show up early and I can ship changes faster.',
   },
   {
     icon: (
