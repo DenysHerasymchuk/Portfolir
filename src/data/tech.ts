@@ -90,6 +90,21 @@ const BY_NAME: Record<string, Tech> = Object.fromEntries([
 // Undefined for technologies without a logo; callers show a lettered fallback.
 export const techLogo = (name: string): Tech | undefined => BY_NAME[ALIASES[name] ?? name];
 
+const saturation = (hex: string) => {
+  const n = parseInt(hex.slice(1), 16);
+  const c = [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+  return Math.max(...c) - Math.min(...c);
+};
+
+// The logo's own colour: whichever of the tile's two colours is more vivid (React's cyan, not its dark tile).
+// Undefined for greyscale logos such as Figma, so callers keep the text colour.
+export const brandColor = (name: string): string | undefined => {
+  const tech = techLogo(name);
+  if (!tech || tech.color) return undefined;
+  const hex = saturation(tech.fg) > saturation(tech.bg) ? tech.fg : tech.bg;
+  return saturation(hex) > 40 ? hex : undefined;
+};
+
 // Everything on the Stack page, grouped. Also feeds the hero tiles and the footer's falling logos.
 export const STACK_GROUPS = [
   { name: 'Frontend', items: ['TypeScript', 'React', 'Angular', 'Tailwind CSS'] },

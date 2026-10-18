@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { techUrl } from '../data/tech';
+import { brandColor, techUrl } from '../data/tech';
 import TechIcon from './TechIcon';
 
 // A row of text that drifts sideways forever and speeds up while the page is being scrolled.
@@ -69,9 +69,16 @@ export default function ScrollVelocity({
         {row.map((item, i) => {
           const copy = i >= items.length;
           const href = withIcons ? techUrl(item) : undefined;
+          const brand = withIcons ? brandColor(item) : undefined;
           const label = (
             <>
-              {withIcons && <TechIcon name={item} variant="mono" className="h-[0.75em] w-[0.75em]" />}
+              {withIcons && (
+                <TechIcon
+                  name={item}
+                  variant="mono"
+                  className="h-[0.75em] w-[0.75em] transition-colors duration-300 group-hover/tech:bg-[var(--brand)] group-focus-visible/tech:bg-[var(--brand)]"
+                />
+              )}
               {item}
             </>
           );
@@ -83,7 +90,9 @@ export default function ScrollVelocity({
                   target="_blank"
                   rel="noopener noreferrer"
                   tabIndex={copy ? -1 : undefined}
-                  className="flex items-center gap-[0.3em] transition-colors hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-haze"
+                  // Hover turns the name and logo the brand colour; greyscale logos fall back to full ink.
+                  style={{ '--brand': brand ?? 'rgb(var(--ink))' } as React.CSSProperties}
+                  className="group/tech flex items-center gap-[0.3em] transition-colors duration-300 hover:text-[var(--brand)] focus-visible:text-[var(--brand)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-haze"
                 >
                   {label}
                 </a>
