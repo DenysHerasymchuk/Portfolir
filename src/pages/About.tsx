@@ -1,27 +1,8 @@
 import { useOutletContext } from 'react-router';
 import Credentials from '../components/Credentials';
+import { Icon } from '../components/Icon';
 import { PrimaryButton } from '../components/PrimaryButton';
 import ScrollVelocity from '../components/ScrollVelocity';
-
-// Line icon in a soft tile; paths use a 24x24 grid and the arrow icon's stroke style.
-function Icon({ children }: { children: React.ReactNode }) {
-  return (
-    <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-ink/[0.06] text-ink">
-      <svg
-        aria-hidden="true"
-        viewBox="0 0 24 24"
-        className="h-5 w-5"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        {children}
-      </svg>
-    </span>
-  );
-}
 
 const HOW_I_WORK = [
   {

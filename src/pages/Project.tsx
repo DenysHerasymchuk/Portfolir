@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router';
 import ArchitectureDiagram from '../components/ArchitectureDiagram';
+import { TopicIcon, type Glyph } from '../components/Icon';
 import { ArrowIcon } from '../components/PrimaryButton';
 import ProjectImage from '../components/ProjectImage';
+import RichText from '../components/RichText';
 import TechChip from '../components/TechChip';
 import { PROJECTS, projectBySlug } from '../data/projects';
 import NotFound from './NotFound';
@@ -45,6 +47,31 @@ function CountUp({ value }: { value: string }) {
   return <span ref={ref}>{shown}</span>;
 }
 
+// A titled block with a keyword icon beside it; the body text comes alive on scroll.
+function Topic({
+  title,
+  body,
+  fallback,
+  mentions,
+}: {
+  title: string;
+  body: string;
+  fallback: Glyph;
+  mentions: string[];
+}) {
+  return (
+    <div className="flex gap-4">
+      <TopicIcon title={title} fallback={fallback} />
+      <div>
+        <h3 className="text-lg font-semibold">{title}</h3>
+        <p className="mt-2 leading-relaxed text-ink/75">
+          <RichText text={body} mentions={mentions} />
+        </p>
+      </div>
+    </div>
+  );
+}
+
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">{children}</h2>;
 }
@@ -58,6 +85,7 @@ export default function Project() {
   const prev = PROJECTS[(index - 1 + PROJECTS.length) % PROJECTS.length];
   const next = PROJECTS[(index + 1) % PROJECTS.length];
   const [cover, ...gallery] = project.images;
+  const mentions = project.stack.flatMap(g => g.items);
 
   return (
     <article className="mx-auto max-w-6xl px-6 pb-40 pt-32 sm:px-10">
@@ -91,7 +119,9 @@ export default function Project() {
           <SectionTitle>Overview</SectionTitle>
           <div className="mt-6 max-w-prose space-y-5 text-lg leading-relaxed text-ink/80">
             {project.overview.map(p => (
-              <p key={p.slice(0, 24)}>{p}</p>
+              <p key={p.slice(0, 24)}>
+                <RichText text={p} mentions={mentions} />
+              </p>
             ))}
           </div>
         </div>
@@ -100,7 +130,7 @@ export default function Project() {
           <ul className="mt-4 space-y-3 text-ink/80">
             {project.responsibilities.map(r => (
               <li key={r} className="border-l-2 border-ink/15 pl-4 leading-relaxed">
-                {r}
+                <RichText text={r} mentions={mentions} />
               </li>
             ))}
           </ul>
@@ -135,10 +165,7 @@ export default function Project() {
         </div>
         <div className="mt-12 grid gap-x-12 gap-y-10 md:grid-cols-2">
           {project.architecture.notes.map(note => (
-            <div key={note.title}>
-              <h3 className="text-lg font-semibold">{note.title}</h3>
-              <p className="mt-2 leading-relaxed text-ink/75">{note.body}</p>
-            </div>
+            <Topic key={note.title} {...note} fallback="server" mentions={mentions} />
           ))}
         </div>
       </section>
@@ -148,10 +175,7 @@ export default function Project() {
           <SectionTitle>Decisions</SectionTitle>
           <div className="mt-8 space-y-8">
             {project.decisions.map(d => (
-              <div key={d.title}>
-                <h3 className="text-lg font-semibold">{d.title}</h3>
-                <p className="mt-2 leading-relaxed text-ink/75">{d.body}</p>
-              </div>
+              <Topic key={d.title} {...d} fallback="check" mentions={mentions} />
             ))}
           </div>
         </div>
@@ -159,10 +183,7 @@ export default function Project() {
           <SectionTitle>What went wrong</SectionTitle>
           <div className="mt-8 space-y-8">
             {project.challenges.map(c => (
-              <div key={c.title}>
-                <h3 className="text-lg font-semibold">{c.title}</h3>
-                <p className="mt-2 leading-relaxed text-ink/75">{c.body}</p>
-              </div>
+              <Topic key={c.title} {...c} fallback="alert" mentions={mentions} />
             ))}
           </div>
         </div>
@@ -173,7 +194,10 @@ export default function Project() {
         <dl className="mt-8 grid gap-8 sm:grid-cols-2 md:grid-cols-4">
           {project.stack.map(group => (
             <div key={group.layer}>
-              <dt className="text-sm text-haze">{group.layer}</dt>
+              <dt className="flex items-center gap-3 font-semibold">
+                <TopicIcon title={group.layer} fallback="spark" size="h-9 w-9" />
+                {group.layer}
+              </dt>
               <dd className="mt-3 flex flex-wrap gap-2">
                 {group.items.map(item => (
                   <TechChip key={item} name={item} />

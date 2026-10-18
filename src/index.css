@@ -64,7 +64,9 @@ body {
   .liquid-glass {
     position: relative;
     isolation: isolate;
-    box-shadow: 0 8px 32px rgb(0 0 0 / 0.18), 0 2px 6px rgb(0 0 0 / 0.08);
+    box-shadow:
+      0 8px 32px rgb(0 0 0 / 0.18),
+      0 2px 6px rgb(0 0 0 / 0.08);
   }
 
   .liquid-glass::before,
@@ -165,6 +167,34 @@ body {
     .link-underline {
       transition: none;
     }
+  }
+}
+
+/* RichText: figures get a marker that sweeps in once the paragraph is on screen; tool mentions get a dotted
+   underline that turns solid on hover. */
+.figure {
+  background: linear-gradient(rgb(var(--haze) / 0.35), rgb(var(--haze) / 0.35)) no-repeat left 88% / 0 0.4em;
+  transition: background-size 0.7s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.is-seen .figure {
+  background-size: 100% 0.4em;
+}
+
+.mention {
+  text-decoration: underline dotted rgb(var(--haze) / 0.7);
+  text-underline-offset: 0.2em;
+}
+
+.mention:hover,
+.mention:focus-visible {
+  text-decoration-style: solid;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .figure {
+    transition: none;
+    background-size: 100% 0.4em;
   }
 }
 
