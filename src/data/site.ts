@@ -1,6 +1,6 @@
 // Nav items, socials and footer columns.
 
-// Organisation marks for the Experience timeline (official logos, used to identify where I worked).
+// Organisation logos for the Experience timeline.
 import buas from '../assets/orgs/buas.png';
 import esn from '../assets/orgs/esn.png';
 import thomasMore from '../assets/orgs/thomas-more.png';
@@ -38,7 +38,7 @@ export const FOOTER_COLUMNS = [
   },
 ];
 
-// Real education and programmes, most recent first.
+// Experience timeline, most recent first. `project` links each entry to a case study.
 export const CREDENTIALS = [
   {
     date: 'Jun 2026 to now',
