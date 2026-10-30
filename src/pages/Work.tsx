@@ -64,8 +64,8 @@ export default function Work() {
       <header className="max-w-3xl">
         <h1 className="font-display text-7xl leading-none sm:text-8xl">Work</h1>
         <p className="mt-6 text-lg leading-relaxed text-ink/75 sm:text-xl">
-          Systems I designed and built end to end, from sensors in the field to the screen. Each one has its own page
-          with the architecture, the trade-offs I made and the problems I ran into along the way.
+          Web apps, Telegram bots and websites I built solo or in a team, from hackathons to tools my ESN section uses.
+          Each one has its own page with the architecture and the choices behind it.
         </p>
       </header>
 
@@ -165,7 +165,7 @@ export default function Work() {
               <div className="group/btn relative grid gap-8 rounded-3xl border border-ink/10 bg-ink/[0.03] p-6 transition-colors hover:border-ink/25 has-[.card-link:focus-visible]:outline has-[.card-link:focus-visible]:outline-2 has-[.card-link:focus-visible]:outline-offset-4 has-[.card-link:focus-visible]:outline-haze sm:p-10 md:grid-cols-[1.1fr_1fr] md:items-center">
                 <div>
                   <p className="text-sm text-haze">
-                    {project.year}, {project.duration}
+                    {[project.year, project.duration].filter(Boolean).join(', ')}
                   </p>
                   <h2 className="mt-2 font-craze text-5xl uppercase leading-none sm:text-6xl">
                     <Link

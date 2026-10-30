@@ -2,8 +2,6 @@
 
 My personal site. There's a hero you can play with, case studies with animated architecture diagrams, a page for my stack, and a footer where clicking my name knocks tech logos out of it. Built with React, TypeScript and Tailwind, in a beige light theme and a dark one.
 
-The projects on the Work page are sample case studies for this demo build. They live in `src/data/projects.ts` and get swapped for real work before the site goes public.
-
 ## Run it
 
 You need Node 18 or newer and npm.
@@ -20,7 +18,7 @@ npm test           # tests in watch mode, CI=true npm test for a single run
 npm run build      # production build in build/
 ```
 
-The build is a plain static site, so any static host will do. Point the host's fallback at `index.html`, or routes like `/work/floodline` will 404 on refresh.
+The build is a plain static site, so any static host will do. Point the host's fallback at `index.html`, or routes like `/work/dayn` will 404 on refresh.
 
 ## What's in here
 

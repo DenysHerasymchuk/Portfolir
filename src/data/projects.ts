@@ -1,4 +1,23 @@
-// Sample projects for the demo build. Replace with real work before publishing.
+import hale1 from '../assets/projects/hale-1.webp';
+import hale2 from '../assets/projects/hale-2.webp';
+import hale3 from '../assets/projects/hale-3.webp';
+import esnForms1 from '../assets/projects/esn-forms-1.webp';
+import esnForms2 from '../assets/projects/esn-forms-2.webp';
+import zhralovka1 from '../assets/projects/zhralovka-1.webp';
+import zhralovka2 from '../assets/projects/zhralovka-2.webp';
+import zhralovka3 from '../assets/projects/zhralovka-3.webp';
+import esnGeel1 from '../assets/projects/esn-geel-1.webp';
+import esnGeel2 from '../assets/projects/esn-geel-2.webp';
+import esnGeel3 from '../assets/projects/esn-geel-3.webp';
+import jouwPlekje1 from '../assets/projects/jouw-plekje-1.webp';
+import farmpoint1 from '../assets/projects/farmpoint-1.webp';
+import dayn1 from '../assets/projects/dayn-1.webp';
+import uchtem1 from '../assets/projects/uchtem-1.webp';
+import uchtem2 from '../assets/projects/uchtem-2.webp';
+import uchtem3 from '../assets/projects/uchtem-3.webp';
+import portfolio1 from '../assets/projects/portfolio-1.webp';
+import portfolio2 from '../assets/projects/portfolio-2.webp';
+import riyCharity1 from '../assets/projects/riy-charity-1.webp';
 
 export type ArchNode = {
   id: string;
@@ -18,7 +37,9 @@ export type Project = {
   summary: string;
   year: string;
   role: string;
-  duration: string;
+  duration?: string; // left out when the real time spent isn't known
+  live?: string;
+  source?: string;
   overview: string[];
   responsibilities: string[];
   stack: { layer: string; items: string[] }[];
@@ -30,11 +51,759 @@ export type Project = {
   decisions: { title: string; body: string }[];
   challenges: { title: string; body: string }[];
   results: { value: string; label: string }[];
-  images: { alt: string; caption: string }[];
-  hue: number; // placeholder artwork tint
+  images: { src: string; alt: string; caption: string; fit?: 'contain'; bg?: string }[]; // empty when no image exists
+  hue: number; // diagram tint
 };
 
 export const PROJECTS: Project[] = [
+  {
+    slug: 'hale-and-grain',
+    name: 'Hale & Grain',
+    tagline: 'A furniture shop where you can spin, zoom and inspect every piece in 3D before buying it.',
+    summary:
+      'A full webshop with a 3D product viewer, real orders, accounts and an admin area, built with React Three Fiber on the front and ASP.NET Core with PostgreSQL behind it.',
+    year: '2026',
+    role: 'Solo project. Frontend, 3D viewer, backend, admin area, CI.',
+    live: 'https://hg.denysherasymchuk.com',
+    source: 'https://github.com/DenysHerasymchuk/hale-and-grain',
+    overview: [
+      'Hale & Grain is a furniture webshop built around one idea: you should be able to walk around a piece before it arrives. Every product page has a 3D viewer, and picking a finish re-tints the model on the spot.',
+      'Around the viewer sits a complete shop: search, filters and sorting, a wishlist, a cart that survives a refresh, guest checkout with a private order link, and accounts with saved addresses, order history and self-service deletion.',
+      'The admin area covers products, finishes, photos, 3D settings with a live preview, categories, stock, orders, customers and store settings. Payments are simulated on purpose: orders are marked as development orders and never as paid.',
+    ],
+    responsibilities: [
+      'Built the React storefront and the 3D viewer with React Three Fiber.',
+      'Built the ASP.NET Core API in C# with EF Core and PostgreSQL.',
+      'Wrote the checkout, which recalculates every price on the server and reserves stock in one transaction.',
+      'Set up CI with xUnit, Vitest, Docker image builds, a Semgrep scan and a merge gate.',
+    ],
+    stack: [
+      { layer: 'Frontend', items: ['React', 'TypeScript', 'Three.js', 'Tailwind CSS'] },
+      { layer: 'Backend', items: ['.NET', 'C#'] },
+      { layer: 'Data', items: ['PostgreSQL'] },
+      { layer: 'Infra', items: ['Docker', 'GitHub'] },
+    ],
+    architecture: {
+      nodes: [
+        { id: 'shop', label: 'Shop', detail: 'React, 3D viewer', x: 110, y: 150, kind: 'client' },
+        { id: 'admin', label: 'Admin area', detail: 'React, /admin', x: 110, y: 410, kind: 'client' },
+        { id: 'api', label: 'API', detail: 'ASP.NET Core', x: 390, y: 280, kind: 'service' },
+        { id: 'app', label: 'Application', detail: 'Pricing, checkout', x: 640, y: 150, kind: 'service' },
+        { id: 'infra', label: 'Infrastructure', detail: 'EF Core, email', x: 640, y: 410, kind: 'service' },
+        { id: 'db', label: 'Postgres', detail: 'Products, orders', x: 890, y: 280, kind: 'store' },
+      ],
+      edges: [
+        { from: 'shop', to: 'api', label: 'REST' },
+        { from: 'admin', to: 'api', label: 'REST' },
+        { from: 'api', to: 'app' },
+        { from: 'api', to: 'infra' },
+        { from: 'app', to: 'db' },
+        { from: 'infra', to: 'db', label: 'migrations' },
+      ],
+      notes: [
+        {
+          title: '3D viewer',
+          body: 'Product pages render the model with React Three Fiber, and choosing a finish re-tints it. The five models are CC0 from Poly Haven, and the product photos are my own Blender renders of them.',
+        },
+        {
+          title: 'Backend layers',
+          body: 'The backend is five projects: Domain, Contracts, Application, Infrastructure and Api. Dependencies only point inwards, and architecture tests fail the build if one leaks.',
+        },
+        {
+          title: 'Checkout',
+          body: 'The server recalculates every price and the delivery charge, and reserves stock in the same transaction. Two people can never both buy the last cabinet, because the database decides who gets it.',
+        },
+        {
+          title: 'Admin',
+          body: 'The API checks the Admin role on every request, so hiding the menu is not what keeps the admin area safe.',
+        },
+      ],
+    },
+    decisions: [
+      {
+        title: 'Prices are decided on the server',
+        body: 'The browser never gets to say what something costs. Checkout works out every price and delivery charge again before an order is created.',
+      },
+      {
+        title: 'Payments behind an interface',
+        body: 'Checkout is clearly labelled as a development checkout. A real provider can later slot in behind IPaymentProvider without touching the order flow.',
+      },
+    ],
+    challenges: [],
+    results: [
+      { value: '5', label: '3D models in the shop' },
+      { value: '5', label: 'Backend projects, inward dependencies only' },
+      { value: '3', label: 'Backend test projects' },
+    ],
+    images: [
+      { src: hale1, alt: 'Hale & Grain home page with a shelving cabinet', caption: 'Home page' },
+      { src: hale2, alt: 'Render of a timber joint', caption: 'Joinery' },
+      { src: hale3, alt: 'Close-up of the Atelier drawer cabinet', caption: 'Product render' },
+    ],
+    hue: 32,
+  },
+  {
+    slug: 'esn-forms',
+    name: 'ESN Forms',
+    tagline: 'A form builder of our own, so ESN Geel members stop making a new Google Form for every event.',
+    summary:
+      'A form-building and event registration platform for ESN Geel: members build a form, publish a public link and track responses, while admins manage accounts and every form.',
+    year: '2026',
+    role: 'Main developer. It started from a static page a fellow developer made, and I built the platform on top.',
+    duration: '4 months',
+    live: 'https://esn-forms.vercel.app',
+    source: 'https://github.com/DenysHerasymchuk/ESN-Forms',
+    overview: [
+      'ESN Geel runs a lot of events, and each one used to need its own Google Form. ESN Forms gives the section one place to create, publish and manage registrations.',
+      'After signing in, a member builds a form from field types such as short answer, email, dropdowns, checkboxes and acknowledgements, publishes it to a shareable link, and follows responses in the built-in submissions view.',
+      'Admins can oversee every form and manage accounts from a dedicated area. There is no public sign-up, so accounts are only created by an admin.',
+    ],
+    responsibilities: [
+      'Built the React app, including the form builder and the schema-driven form renderer.',
+      'Designed the PostgreSQL schema, row level security policies and triggers on Supabase.',
+      'Wrote the Edge Functions for public submissions and admin account management.',
+      'Added Cloudflare Turnstile verification on the public submission path.',
+    ],
+    stack: [
+      { layer: 'Frontend', items: ['React', 'TypeScript', 'Tailwind CSS'] },
+      { layer: 'Backend', items: ['Supabase'] },
+      { layer: 'Data', items: ['PostgreSQL'] },
+      { layer: 'Infra', items: ['GitHub'] },
+    ],
+    architecture: {
+      nodes: [
+        { id: 'public', label: 'Public form', detail: 'Shareable link', x: 110, y: 150, kind: 'client' },
+        { id: 'dash', label: 'Dashboard', detail: 'React builder', x: 110, y: 410, kind: 'client' },
+        { id: 'submit', label: 'submit-form', detail: 'Edge Function', x: 420, y: 150, kind: 'service' },
+        { id: 'admin', label: 'Admin functions', detail: 'Users, force delete', x: 420, y: 410, kind: 'service' },
+        { id: 'turnstile', label: 'Turnstile', detail: 'Bot check', x: 700, y: 150, kind: 'edge' },
+        { id: 'db', label: 'Postgres', detail: 'RLS, triggers', x: 760, y: 410, kind: 'store' },
+      ],
+      edges: [
+        { from: 'public', to: 'submit', label: 'answers' },
+        { from: 'submit', to: 'turnstile', label: 'verify' },
+        { from: 'submit', to: 'db', label: 'write' },
+        { from: 'dash', to: 'db', label: 'RLS' },
+        { from: 'dash', to: 'admin' },
+        { from: 'admin', to: 'db' },
+      ],
+      notes: [
+        {
+          title: 'Form schema',
+          body: 'Forms are stored as a field schema. One shared validator is used by both the frontend renderer and the submit-form function, so what counts as a valid answer is defined once.',
+        },
+        {
+          title: 'Public submissions',
+          body: 'The submit-form Edge Function is the only public way to write a submission. It verifies a Cloudflare Turnstile token before it accepts anything.',
+        },
+        {
+          title: 'Database rules',
+          body: 'Row level security, Postgres functions and triggers handle the form lifecycle, submission validation and roles, so the rules hold no matter which client is calling.',
+        },
+        {
+          title: 'Admin functions',
+          body: 'Creating, editing and deleting accounts, and force-deleting a form with responses, need the service-role key. Those actions live in admin-only Edge Functions instead of the browser.',
+        },
+      ],
+    },
+    decisions: [
+      {
+        title: 'No public sign-up',
+        body: 'This is an internal tool for a volunteer section, so accounts are created by an admin. That removes a whole class of abuse.',
+      },
+      {
+        title: 'One write path for submissions',
+        body: 'Sending every public answer through one Edge Function gives a single place for bot checks and validation.',
+      },
+    ],
+    challenges: [],
+    results: [
+      { value: '10', label: 'Field types in the builder' },
+      { value: '5', label: 'Edge Functions' },
+      { value: '17', label: 'Schema migrations' },
+    ],
+    images: [
+      { src: esnForms1, alt: 'ESN Forms banner reading From sign-up to show-up', caption: 'ESN Forms' },
+      { src: esnForms2, alt: 'ESN Forms login page', caption: 'Login' },
+    ],
+    hue: 200,
+  },
+  {
+    slug: 'zhralovka',
+    name: 'Zhralovka',
+    tagline: 'The Thomas More cafeteria menu in Telegram, with a daily reminder before lunch.',
+    summary:
+      "A Telegram bot where you pick your campus once and get today's menu, the week, prices and a daily reminder, in English, Dutch or Ukrainian.",
+    year: '2026',
+    role: 'Solo project. Bot, data storage, translations, deployment.',
+    duration: '4 days',
+    live: 'https://t.me/zhralovkabot',
+    source: 'https://github.com/DenysHerasymchuk/zhralovka',
+    overview: [
+      'Zhralovka answers one question for Thomas More students: what is for lunch? You pick your campus once, then ask for today, the week or the price board, or have the menu sent to you every day at 11:00.',
+      'It works in groups too. Group admins set the campus and the daily menu, and everyone can ask for the menu.',
+      'Menus come from the cafeteria API, which only has English and Dutch dish names. Each dish is translated to Ukrainian once with DeepL and stored, so a dish never has to be translated twice.',
+    ],
+    responsibilities: [
+      'Built the bot in Python with aiogram, including commands, settings and group support.',
+      'Wrote the menu client with a weekly cache, plus retries when the new week is not out yet.',
+      'Added translations for dish names and the bot text in three languages.',
+      'Set up GitHub Actions to test, build the Docker image and redeploy through Coolify.',
+    ],
+    stack: [
+      { layer: 'Backend', items: ['Python', 'aiogram'] },
+      { layer: 'Data', items: ['SQLite'] },
+      { layer: 'Infra', items: ['Docker', 'GitHub', 'Coolify'] },
+    ],
+    architecture: {
+      nodes: [
+        { id: 'users', label: 'Telegram', detail: 'Chats and groups', x: 110, y: 280, kind: 'client' },
+        { id: 'bot', label: 'Bot', detail: 'Python, aiogram', x: 370, y: 280, kind: 'service' },
+        { id: 'menu', label: 'Menu client', detail: 'Weekly cache', x: 620, y: 150, kind: 'service' },
+        { id: 'notifier', label: 'Notifier', detail: 'Daily menu', x: 620, y: 410, kind: 'service' },
+        { id: 'api', label: 'Menu API', detail: 'Thomas More', x: 880, y: 150, kind: 'edge' },
+        { id: 'db', label: 'SQLite', detail: 'Users, translations', x: 880, y: 410, kind: 'store' },
+      ],
+      edges: [
+        { from: 'users', to: 'bot', label: 'commands' },
+        { from: 'bot', to: 'menu' },
+        { from: 'menu', to: 'api', label: 'fetch' },
+        { from: 'bot', to: 'notifier' },
+        { from: 'notifier', to: 'db' },
+        { from: 'bot', to: 'db' },
+      ],
+      notes: [
+        {
+          title: 'Menu cache',
+          body: "Each campus's week is fetched once and cached until Monday 07:00. If the new week is not published yet, the bot retries every 30 minutes.",
+        },
+        {
+          title: 'Translations',
+          body: 'The menu API has no Ukrainian, so dish names go through DeepL once and are stored in SQLite. New weeks are translated on Monday morning, and without a key dishes simply stay in English.',
+        },
+        {
+          title: 'Prices',
+          body: 'Prices are not in the API. They live in one file, copied from the printed price board in cents.',
+        },
+        {
+          title: 'Daily menu',
+          body: 'The notifier skips days without dishes and days when the service is down, and users who block the bot are unsubscribed.',
+        },
+      ],
+    },
+    decisions: [
+      {
+        title: 'Cache the whole week',
+        body: 'Menus rarely change, so one fetch per campus per week keeps the bot fast and light on the API. The trade-off is that mid-week kitchen changes are not picked up.',
+      },
+    ],
+    challenges: [],
+    results: [
+      { value: '7', label: 'Campuses' },
+      { value: '3', label: 'Languages' },
+      { value: '9', label: 'Commands' },
+      { value: '11:00', label: 'Default daily menu' },
+    ],
+    images: [
+      { src: zhralovka1, alt: 'Zhralovka banner with a cat on a burger', caption: 'Bot banner' },
+      { src: zhralovka2, alt: 'Zhralovka Today card with a plate of food', caption: 'Today' },
+      { src: zhralovka3, alt: 'Zhralovka This Week card with several dishes', caption: 'This week' },
+    ],
+    hue: 48,
+  },
+  {
+    slug: 'esn-geel',
+    name: 'ESN Geel',
+    tagline: 'A from-scratch rebuild of the ESN Geel website, with events that board members publish themselves.',
+    summary:
+      'The new website for the Erasmus Student Network section of Geel, Turnhout and Vorselaar, in progress: a React site with its events served from a Drupal CMS.',
+    year: '2026',
+    role: 'Solo project as IT Manager of ESN Geel. Still in progress.',
+    duration: 'Since Aug 2026',
+    live: 'https://esngeel.org',
+    overview: [
+      'ESN Geel is the local Erasmus Student Network section for Geel, Turnhout and Vorselaar. As its IT Manager I am rebuilding the website from scratch, and this page will grow as the work continues.',
+      'The site is a Vite and React frontend. Besides the home page it has pages for events, the team, partners, the ESNcard and the legal texts.',
+      'Events come from a Drupal CMS over JSON:API. Board members get an event editor role, so they can publish events themselves without touching the code.',
+    ],
+    responsibilities: [
+      'Built the React site and its visual style, following the ESN brand.',
+      'Set up Drupal with an event content type and a role for board members.',
+      'Connected the Events page to Drupal over JSON:API.',
+      'Set up the deployment to Hostinger through GitHub Actions.',
+    ],
+    stack: [
+      { layer: 'Frontend', items: ['React', 'JavaScript', 'Tailwind CSS'] },
+      { layer: 'Backend', items: ['Drupal', 'PHP'] },
+      { layer: 'Data', items: ['MySQL'] },
+      { layer: 'Infra', items: ['Docker', 'GitHub'] },
+    ],
+    architecture: {
+      nodes: [
+        { id: 'visitor', label: 'Visitors', detail: 'Browser', x: 110, y: 150, kind: 'client' },
+        { id: 'site', label: 'Website', detail: 'React, Vite', x: 400, y: 150, kind: 'service' },
+        { id: 'drupal', label: 'Drupal', detail: 'JSON:API', x: 680, y: 150, kind: 'service' },
+        { id: 'db', label: 'MySQL', detail: 'Content', x: 890, y: 280, kind: 'store' },
+        { id: 'board', label: 'Board members', detail: 'Event editors', x: 680, y: 410, kind: 'client' },
+      ],
+      edges: [
+        { from: 'visitor', to: 'site', label: 'HTTPS' },
+        { from: 'site', to: 'drupal', label: 'events' },
+        { from: 'drupal', to: 'db' },
+        { from: 'board', to: 'drupal', label: 'publish' },
+      ],
+      notes: [
+        {
+          title: 'Website',
+          body: 'A static React build, deployed to Hostinger by GitHub Actions. Design tokens for colours, fonts, spacing and motion are written down in a style guide that the whole site follows.',
+        },
+        {
+          title: 'Events',
+          body: 'The Events page fetches published event nodes from JSON:API at runtime, so a new event appears without a rebuild. CORS is limited to the website origins and to GET requests.',
+        },
+      ],
+    },
+    decisions: [
+      {
+        title: 'Drupal only for events',
+        body: 'Board members change every year and should not need a developer to post an event. A small CMS behind a static site gives them that, while the site itself stays simple to host.',
+      },
+    ],
+    challenges: [],
+    results: [
+      { value: '3', label: 'Towns covered by the section' },
+      { value: '8', label: 'Pages so far' },
+    ],
+    images: [
+      { src: esnGeel1, alt: 'ESN Geel home page reading Your Erasmus starts in Geel', caption: 'Home page' },
+      { src: esnGeel2, alt: 'Large group of ESN volunteers holding ESN banners', caption: 'ESN community' },
+      { src: esnGeel3, alt: 'Sample ESNcard with a cartoon cow', caption: 'ESNcard page', fit: 'contain', bg: '#ffffff' },
+    ],
+    hue: 190,
+  },
+  {
+    slug: 'jouw-plekje',
+    name: 'Jouw Plekje',
+    tagline: 'Matchmaking that connects brands with local cafés for advertising partnerships.',
+    summary:
+      'A matchmaking platform built during an international Blended Intensive Programme on data science and AI. I owned the backend CRUD and the admin panel.',
+    year: '2026',
+    role: 'Team project. I owned the backend CRUD and the admin panel.',
+    duration: '2 months',
+    overview: [
+      'Jouw Plekje connects brands with local cafés for advertising partnerships. Brands and cafés each get a profile, send each other match requests, and form a match when the other side accepts.',
+      'We built it during an international Blended Intensive Programme on data science and AI at Breda University of Applied Sciences, and presented it as a working concept at the final showcase.',
+    ],
+    responsibilities: [
+      'Designed the PostgreSQL schema and built the backend CRUD.',
+      'Built the admin panel and the validation and image uploads behind the profiles.',
+      'Wrote the matching logic, from request to accepted match.',
+      'Set up role-based access for admins, brands and cafés.',
+    ],
+    stack: [
+      { layer: 'Frontend', items: ['Livewire', 'Alpine.js', 'Tailwind CSS', 'Vite'] },
+      { layer: 'Backend', items: ['Laravel', 'PHP'] },
+      { layer: 'Data', items: ['PostgreSQL'] },
+      { layer: 'Infra', items: ['Docker'] },
+    ],
+    architecture: {
+      nodes: [
+        { id: 'brand', label: 'Brands', detail: 'Dashboard', x: 110, y: 150, kind: 'client' },
+        { id: 'cafe', label: 'Cafés', detail: 'Dashboard', x: 110, y: 410, kind: 'client' },
+        { id: 'app', label: 'Laravel app', detail: 'Livewire, roles', x: 400, y: 280, kind: 'service' },
+        { id: 'match', label: 'Matching', detail: 'Requests, matches', x: 660, y: 150, kind: 'service' },
+        { id: 'admin', label: 'Admin panel', detail: 'Livewire', x: 660, y: 410, kind: 'service' },
+        { id: 'db', label: 'Postgres', detail: 'Profiles, matches', x: 890, y: 280, kind: 'store' },
+      ],
+      edges: [
+        { from: 'brand', to: 'app' },
+        { from: 'cafe', to: 'app' },
+        { from: 'app', to: 'match' },
+        { from: 'app', to: 'admin' },
+        { from: 'match', to: 'db' },
+        { from: 'admin', to: 'db' },
+      ],
+      notes: [
+        {
+          title: 'Matching',
+          body: 'Either side can send a match request, which stays pending until it is accepted or declined. An accepted request becomes a match, and both sides are notified.',
+        },
+        {
+          title: 'Roles',
+          body: 'Route middleware checks the role of every user, and a second check keeps people out of the dashboard until their profile is complete.',
+        },
+      ],
+    },
+    decisions: [],
+    challenges: [],
+    results: [
+      { value: '3', label: 'Types of account' },
+      { value: '2', label: 'Months in an international team' },
+    ],
+    images: [
+      { src: jouwPlekje1, alt: 'Jouw Plekje logo', caption: 'Logo', fit: 'contain', bg: '#ffffff' },
+    ],
+    hue: 340,
+  },
+  {
+    slug: 'farmpoint',
+    name: 'FarmPoint',
+    tagline: 'African farmers buy and sell crops through Telegram, with a Laravel admin panel behind it.',
+    summary:
+      "Built in three days at Thomas More's MORE Week hackathon. I worked on the backend: the database design, CRUD and the admin dashboard.",
+    year: '2026',
+    role: 'Team project. I worked on the backend and the admin dashboard.',
+    duration: '3 days',
+    overview: [
+      "FarmPoint helps African farmers buy and sell crops through Telegram, so they can trade from a phone without learning a new app. It was built in three days at Thomas More's MORE Week hackathon.",
+      'Behind the bot is a Laravel admin panel where governments and agronomists can monitor activity. The team demoed the MVP to the jury at the final.',
+    ],
+    responsibilities: [
+      'Designed the database for farmers, crops and transactions.',
+      'Built the CRUD screens and the live-search tables with Livewire.',
+      'Built the admin dashboard for governments and agronomists.',
+    ],
+    stack: [
+      { layer: 'Frontend', items: ['Livewire', 'Alpine.js', 'Tailwind CSS'] },
+      { layer: 'Backend', items: ['Laravel', 'PHP'] },
+      { layer: 'Data', items: ['SQLite'] },
+    ],
+    architecture: {
+      nodes: [
+        { id: 'farmers', label: 'Farmers', detail: 'Telegram', x: 110, y: 150, kind: 'client' },
+        { id: 'bot', label: 'Bot endpoint', detail: 'Laravel API', x: 400, y: 150, kind: 'edge' },
+        { id: 'app', label: 'Laravel app', detail: 'Models, CRUD', x: 660, y: 280, kind: 'service' },
+        { id: 'db', label: 'Database', detail: 'Crops, transactions', x: 890, y: 280, kind: 'store' },
+        { id: 'admin', label: 'Admin panel', detail: 'Livewire', x: 400, y: 410, kind: 'service' },
+        { id: 'gov', label: 'Governments', detail: 'And agronomists', x: 110, y: 410, kind: 'client' },
+      ],
+      edges: [
+        { from: 'farmers', to: 'bot', label: 'chat' },
+        { from: 'bot', to: 'app' },
+        { from: 'app', to: 'db' },
+        { from: 'gov', to: 'admin' },
+        { from: 'admin', to: 'app' },
+      ],
+      notes: [
+        {
+          title: 'Admin panel',
+          body: 'Livewire screens cover farms, products, users and warehouses, with live-search tables and a dashboard for monitoring activity.',
+        },
+        {
+          title: 'Telegram',
+          body: 'The bot talks to the Laravel app through a dedicated API endpoint, so chat orders end up in the same database as everything else.',
+        },
+      ],
+    },
+    decisions: [],
+    challenges: [],
+    results: [
+      { value: '3', label: 'Days from idea to demo' },
+      { value: '4', label: 'Admin CRUD areas' },
+      { value: '3', label: 'Account roles' },
+    ],
+    images: [
+      { src: farmpoint1, alt: 'FarmPoint banner reading Fresh from the farm, straight to your table', caption: 'FarmPoint', fit: 'contain', bg: '#0b2a20' },
+    ],
+    hue: 110,
+  },
+  {
+    slug: 'dayn',
+    name: 'DAYN',
+    tagline: 'Send a link to a Telegram bot and get the video, audio or slideshow back in your chat.',
+    summary:
+      "A Telegram bot that downloads from YouTube and TikTok, with quality menus, live progress, and a direct link for files over Telegram's 50 MB limit.",
+    year: '2026',
+    role: 'Solo project. Bot, downloaders, file server, monitoring.',
+    duration: '3 months',
+    overview: [
+      'DAYN, short for Download All Your Needs, makes downloading from YouTube and TikTok as simple as sending a link. It handles videos, audio and photo slideshows.',
+      'Users pick the quality from inline menus and see live progress updates while the file downloads. Private or geo-restricted videos are handled, and temporary files are cleaned up after sending.',
+      "Telegram bots can only upload files up to 50 MB. Bigger files are served by a small built-in HTTP server instead, and the user gets a direct download link that expires after a set time.",
+    ],
+    responsibilities: [
+      'Built the bot in Python with aiogram, with separate handlers for YouTube and TikTok.',
+      'Wrote the downloaders on top of yt-dlp, including quality selection and audio extraction.',
+      'Built the file server for large files.',
+      'Added Prometheus metrics and Grafana dashboards, all run with Docker Compose.',
+    ],
+    stack: [
+      { layer: 'Backend', items: ['Python', 'aiogram', 'yt-dlp'] },
+      { layer: 'Infra', items: ['Docker', 'Prometheus', 'Grafana'] },
+    ],
+    architecture: {
+      nodes: [
+        { id: 'user', label: 'Telegram', detail: 'Sends a link', x: 110, y: 150, kind: 'client' },
+        { id: 'bot', label: 'Bot', detail: 'aiogram handlers', x: 370, y: 150, kind: 'service' },
+        { id: 'dl', label: 'Downloaders', detail: 'yt-dlp', x: 630, y: 150, kind: 'service' },
+        { id: 'src', label: 'Sources', detail: 'YouTube, TikTok', x: 890, y: 150, kind: 'edge' },
+        { id: 'web', label: 'File server', detail: 'Over 50 MB', x: 370, y: 410, kind: 'service' },
+        { id: 'prom', label: 'Prometheus', detail: 'Metrics', x: 630, y: 410, kind: 'store' },
+        { id: 'graf', label: 'Grafana', detail: 'Dashboards', x: 890, y: 410, kind: 'client' },
+      ],
+      edges: [
+        { from: 'user', to: 'bot', label: 'link' },
+        { from: 'bot', to: 'dl' },
+        { from: 'dl', to: 'src', label: 'fetch' },
+        { from: 'bot', to: 'web', label: 'large files' },
+        { from: 'bot', to: 'prom', label: 'metrics' },
+        { from: 'prom', to: 'graf' },
+      ],
+      notes: [
+        {
+          title: 'Handlers',
+          body: 'A router sends each link to the YouTube or TikTok handlers, which track the session through quality choice, download and delivery.',
+        },
+        {
+          title: 'Large files',
+          body: 'Files over the limit are hosted on the built-in web server behind a private link. The link lasts 30 minutes by default, and the file is deleted afterwards.',
+        },
+        {
+          title: 'Monitoring',
+          body: 'Docker Compose runs the bot next to Prometheus, Grafana and Node Exporter, so downloads, success rates and errors are visible on a dashboard.',
+        },
+      ],
+    },
+    decisions: [],
+    challenges: [
+      {
+        title: "Telegram's 50 MB upload limit",
+        body: 'Long videos in high quality could not be sent through the Bot API at all. The file server gets around that, and large qualities are marked in the menu so users know they will get a link.',
+      },
+    ],
+    results: [
+      { value: '2', label: 'Platforms' },
+      { value: '50MB', label: 'Telegram limit worked around' },
+      { value: '30min', label: 'Default link lifetime' },
+      { value: '4', label: 'Docker services' },
+    ],
+    images: [
+      { src: dayn1, alt: 'DAYN logo', caption: 'Logo', fit: 'contain', bg: '#ffffff' },
+    ],
+    hue: 268,
+  },
+  {
+    slug: 'uchtem',
+    name: 'Uchtem',
+    tagline: 'A bilingual brand website for financial management that reads like a private institution.',
+    summary:
+      'A premium marketing site for a financial management and business consulting brand, in Ukrainian first and English second, built to avoid the look of a generic accounting firm.',
+    year: '2026',
+    role: 'Solo project. Design and build.',
+    live: 'https://uchtem.vercel.app',
+    source: 'https://github.com/DenysHerasymchuk/uchtem',
+    overview: [
+      'Uchtem is a financial management and business consulting brand. The site had to read like a private institution, not like another accounting firm.',
+      'Every page is fully built in both languages: home, services, the two service pillars, about and contact. Ukrainian is the default, and each page has a mirror under /en with matching hreflang and canonical tags.',
+    ],
+    responsibilities: [
+      'Designed and built the React site with a section-based component system.',
+      'Set up the two-language routing and translations with i18next.',
+      'Added SEO tags per language, a sitemap and robots file.',
+      'Wrote the Vitest test suite.',
+    ],
+    stack: [
+      { layer: 'Frontend', items: ['React', 'TypeScript', 'Tailwind CSS', 'Vite', 'i18next'] },
+      { layer: 'Testing', items: ['Vitest'] },
+    ],
+    architecture: {
+      nodes: [
+        { id: 'visitor', label: 'Visitors', detail: 'UA or EN', x: 110, y: 280, kind: 'client' },
+        { id: 'routes', label: 'Routes', detail: '/ and /en mirror', x: 390, y: 280, kind: 'service' },
+        { id: 'i18n', label: 'i18next', detail: 'Language sync', x: 660, y: 150, kind: 'service' },
+        { id: 'seo', label: 'Seo', detail: 'hreflang, canonical', x: 660, y: 410, kind: 'service' },
+        { id: 'copy', label: 'Translations', detail: 'JSON per page', x: 890, y: 150, kind: 'store' },
+      ],
+      edges: [
+        { from: 'visitor', to: 'routes' },
+        { from: 'routes', to: 'i18n', label: 'locale' },
+        { from: 'routes', to: 'seo' },
+        { from: 'i18n', to: 'copy' },
+      ],
+      notes: [
+        {
+          title: 'Routing',
+          body: 'The same route tree is mounted at the root in Ukrainian and under /en in English. The URL decides the language, and every internal link stays in the current one.',
+        },
+        {
+          title: 'SEO',
+          body: 'One component writes the hreflang alternates and the right canonical URL for each language, so every route only has to pass its own path.',
+        },
+      ],
+    },
+    decisions: [
+      {
+        title: 'The URL decides the language',
+        body: 'Keeping the language in the path gives both versions their own indexable address, and a shared link always opens in the language it was sent in.',
+      },
+    ],
+    challenges: [],
+    results: [
+      { value: '2', label: 'Languages, both complete' },
+      { value: '6', label: 'Main pages' },
+    ],
+    images: [
+      { src: uchtem1, alt: 'Uchtem home page in Ukrainian', caption: 'Home page' },
+      { src: uchtem2, alt: 'Uchtem home page in English', caption: 'English version' },
+      { src: uchtem3, alt: 'Uchtem contact form', caption: 'Contact' },
+    ],
+    hue: 225,
+  },
+  {
+    slug: 'portfolio',
+    name: 'This website',
+    tagline: 'The site you are on: a playable hero, animated architecture diagrams and a footer you can knock apart.',
+    summary:
+      'My personal site, built with React, TypeScript and Tailwind, with a beige light theme and a dark one.',
+    year: '2026',
+    role: 'Solo project. Design and build.',
+    live: 'https://denysherasymchuk.com',
+    source: 'https://github.com/DenysHerasymchuk/Portfolir',
+    overview: [
+      'This site has a hero you can play with, a page per project with an animated architecture diagram, a page for my stack, and a footer where clicking my name knocks tech logos out of it.',
+      'Almost all of the content lives in plain data files, so changing the text rarely means touching a component. The Work page has search, tech filters and sorting, all stored in the URL so a filtered view can be shared.',
+      'Light and dark mode follow your system until you pick one, and if your device asks for reduced motion the animations calm down.',
+    ],
+    responsibilities: [
+      'Designed and built every page.',
+      'Built the architecture diagrams and the theme system.',
+      'Adapted the hero background and mobile menu from React Bits.',
+    ],
+    stack: [
+      { layer: 'Frontend', items: ['React', 'TypeScript', 'Tailwind CSS', 'GSAP'] },
+    ],
+    architecture: {
+      nodes: [
+        { id: 'data', label: 'Data files', detail: 'Projects, stack', x: 110, y: 280, kind: 'store' },
+        { id: 'pages', label: 'Pages', detail: 'React Router', x: 400, y: 280, kind: 'service' },
+        { id: 'parts', label: 'Components', detail: 'Diagrams, chips', x: 660, y: 150, kind: 'service' },
+        { id: 'theme', label: 'Theme', detail: 'CSS variables', x: 660, y: 410, kind: 'service' },
+        { id: 'visitor', label: 'Visitors', detail: 'Browser', x: 890, y: 280, kind: 'client' },
+      ],
+      edges: [
+        { from: 'data', to: 'pages' },
+        { from: 'pages', to: 'parts' },
+        { from: 'pages', to: 'theme' },
+        { from: 'parts', to: 'visitor' },
+        { from: 'theme', to: 'visitor' },
+      ],
+      notes: [
+        {
+          title: 'Content',
+          body: 'Projects, the stack and the experience timeline are data files, including the nodes of the diagram above.',
+        },
+        {
+          title: 'Motion',
+          body: 'React Router handles view transitions between pages, GSAP drives the mobile menu and WebGL draws the hero background.',
+        },
+      ],
+    },
+    decisions: [],
+    challenges: [],
+    results: [
+      { value: '6', label: 'Page types' },
+      { value: '2', label: 'Themes' },
+    ],
+    images: [
+      { src: portfolio1, alt: 'Home page of this website', caption: 'Home page' },
+      { src: portfolio2, alt: 'Work page of this website with search and filters', caption: 'Work page' },
+    ],
+    hue: 28,
+  },
+  {
+    slug: 'riy-charity',
+    name: 'RIY Charity',
+    tagline: 'A donation platform for Ukraine aid, with a live dashboard of what the donations do.',
+    summary:
+      "A donation platform supporting Ukraine aid initiatives. I focused on the live dashboard and an archive of the foundation's expenses.",
+    year: '2025',
+    role: 'Team project. I focused on the dashboard and the expense archive.',
+    live: 'https://riycharity.netlify.app/',
+    overview: [
+      'RIY Charity is a donation platform that supports Ukraine aid initiatives. People can see where their money goes: a live dashboard shows donation counts and families supported.',
+      "I also built an archive of the foundation's expenses, running from 2016 to the present.",
+    ],
+    responsibilities: [
+      'Built the live dashboard with donation counts and families supported.',
+      "Built the archive of the foundation's expenses.",
+      'Added scroll-triggered counter animations in vanilla JavaScript.',
+      "Reviewed and merged teammates' work through Git.",
+    ],
+    stack: [{ layer: 'Frontend', items: ['HTML', 'CSS', 'JavaScript'] }],
+    architecture: {
+      nodes: [
+        { id: 'visitor', label: 'Visitors', detail: 'Browser', x: 130, y: 280, kind: 'client' },
+        { id: 'site', label: 'Website', detail: 'HTML, CSS', x: 420, y: 280, kind: 'edge' },
+        { id: 'dash', label: 'Dashboard', detail: 'Live counters', x: 720, y: 150, kind: 'service' },
+        { id: 'archive', label: 'Expense archive', detail: '2016 to now', x: 720, y: 410, kind: 'service' },
+      ],
+      edges: [
+        { from: 'visitor', to: 'site' },
+        { from: 'site', to: 'dash' },
+        { from: 'site', to: 'archive' },
+      ],
+      notes: [
+        {
+          title: 'Counters',
+          body: 'The dashboard numbers count up when they scroll into view, written in vanilla JavaScript without any library.',
+        },
+      ],
+    },
+    decisions: [],
+    challenges: [],
+    results: [{ value: '2016', label: 'Expense archive goes back to' }],
+    images: [
+      { src: riyCharity1, alt: 'RIY home page reading Making a Difference Together', caption: 'Home page' },
+    ],
+    hue: 215,
+  },
+  {
+    slug: 'first-portfolio',
+    name: 'First Portfolio',
+    tagline: 'My first portfolio, built for the Web-Design course.',
+    summary:
+      'Where I practised semantic HTML, the Bootstrap grid, flexbox and responsive layouts, hosted on Netlify with automatic deploys and a custom domain.',
+    year: '2025',
+    role: 'Solo project for the Web-Design course.',
+    overview: [
+      'This was my first portfolio, built for the Web-Design course. It is where I practised semantic HTML, the Bootstrap grid, flexbox and responsive layouts.',
+      'It is hosted on Netlify with automatic deploys and a custom domain.',
+    ],
+    responsibilities: [
+      'Designed and built the whole site.',
+      'Set up Netlify with automatic deploys and a custom domain.',
+    ],
+    stack: [
+      { layer: 'Frontend', items: ['HTML', 'CSS', 'Bootstrap'] },
+      { layer: 'Infra', items: ['Netlify'] },
+    ],
+    architecture: {
+      nodes: [
+        { id: 'repo', label: 'Git', detail: 'Source', x: 150, y: 280, kind: 'client' },
+        { id: 'netlify', label: 'Netlify', detail: 'Automatic deploys', x: 500, y: 280, kind: 'edge' },
+        { id: 'visitor', label: 'Visitors', detail: 'Custom domain', x: 850, y: 280, kind: 'client' },
+      ],
+      edges: [
+        { from: 'repo', to: 'netlify', label: 'push' },
+        { from: 'netlify', to: 'visitor', label: 'HTTPS' },
+      ],
+      notes: [
+        {
+          title: 'Hosting',
+          body: 'Every push to the repository deploys through Netlify to the custom domain.',
+        },
+      ],
+    },
+    decisions: [],
+    challenges: [],
+    results: [],
+    images: [],
+    hue: 165,
+  },
+];
+
+/* Sample case studies from the demo build, none of them real. Not used by the site.
+[
   {
     slug: 'floodline',
     name: 'Floodline',
@@ -1308,6 +2077,7 @@ export const PROJECTS: Project[] = [
     ],
     hue: 130,
   },
-];
+]
+*/
 
 export const projectBySlug = (slug: string | undefined) => PROJECTS.find(p => p.slug === slug);

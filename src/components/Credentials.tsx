@@ -65,9 +65,7 @@ export default function Credentials({ className = '' }: { className?: string }) 
                 >
                   <div className="overflow-hidden rounded-2xl">
                     <ProjectImage
-                      name={project.name}
-                      caption={project.images[0].caption}
-                      hue={project.hue}
+                      image={project.images[0]}
                       className="aspect-[16/9] transition-transform duration-500 ease-out group-hover/btn:scale-[1.03] motion-reduce:transition-none"
                     />
                   </div>

@@ -67,7 +67,7 @@ export default function SelectedWork() {
             <div className="group/btn relative grid gap-8 rounded-[inherit] p-6 has-[.card-link:focus-visible]:outline has-[.card-link:focus-visible]:outline-2 has-[.card-link:focus-visible]:outline-offset-4 has-[.card-link:focus-visible]:outline-haze sm:p-10 md:grid-cols-[1fr_1.15fr] md:items-center">
               <div>
                 <p className="text-sm text-haze">
-                  {project.year}, {project.duration}
+                  {[project.year, project.duration].filter(Boolean).join(', ')}
                 </p>
                 <h3 className="mt-2 font-craze text-5xl uppercase leading-none sm:text-6xl">
                   <Link
@@ -96,9 +96,7 @@ export default function SelectedWork() {
                 </span>
               </div>
               <ProjectImage
-                name={project.name}
-                caption={project.images[0].caption}
-                hue={project.hue}
+                image={project.images[0]}
                 className="aspect-[16/10]"
               />
             </div>

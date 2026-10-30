@@ -105,14 +105,16 @@ export default function Project() {
             <dt className="text-haze">Year</dt>
             <dd className="mt-1 text-base">{project.year}</dd>
           </div>
-          <div>
-            <dt className="text-haze">Time spent</dt>
-            <dd className="mt-1 text-base">{project.duration}</dd>
-          </div>
+          {project.duration && (
+            <div>
+              <dt className="text-haze">Time spent</dt>
+              <dd className="mt-1 text-base">{project.duration}</dd>
+            </div>
+          )}
         </dl>
       </header>
 
-      <ProjectImage name={project.name} caption={cover.caption} hue={project.hue} className="mt-14 aspect-[16/9]" />
+      {cover && <ProjectImage image={cover} className="mt-14 aspect-[16/9]" />}
 
       <section className="mt-28 grid gap-12 md:grid-cols-[1.5fr_1fr]">
         <div>
@@ -137,19 +139,21 @@ export default function Project() {
         </div>
       </section>
 
-      <section className="mt-28">
-        <SectionTitle>Results</SectionTitle>
-        <dl className="mt-8 grid grid-cols-2 gap-px overflow-hidden rounded-3xl border border-ink/10 bg-ink/10 md:grid-cols-4">
-          {project.results.map(r => (
-            <div key={r.label} className="flex flex-col-reverse bg-paper p-6 sm:p-8">
-              <dt className="mt-3 text-sm text-haze">{r.label}</dt>
-              <dd className="font-craze text-5xl leading-none sm:text-6xl">
-                <CountUp value={r.value} />
-              </dd>
-            </div>
-          ))}
-        </dl>
-      </section>
+      {project.results.length > 0 && (
+        <section className="mt-28">
+          <SectionTitle>Results</SectionTitle>
+          <dl className="mt-8 grid grid-cols-2 gap-px overflow-hidden rounded-3xl border border-ink/10 bg-ink/10 md:grid-cols-4">
+            {project.results.map(r => (
+              <div key={r.label} className="flex flex-col-reverse bg-paper p-6 sm:p-8">
+                <dt className="mt-3 text-sm text-haze">{r.label}</dt>
+                <dd className="font-craze text-5xl leading-none sm:text-6xl">
+                  <CountUp value={r.value} />
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+      )}
 
       <section className="mt-28">
         <SectionTitle>Architecture</SectionTitle>
@@ -174,24 +178,30 @@ export default function Project() {
         </div>
       </section>
 
-      <section className="mt-28 grid gap-16 md:grid-cols-2">
-        <div>
-          <SectionTitle>Decisions</SectionTitle>
-          <div className="mt-8 space-y-8">
-            {project.decisions.map(d => (
-              <Topic key={d.title} {...d} fallback="check" mentions={mentions} />
-            ))}
-          </div>
-        </div>
-        <div>
-          <SectionTitle>What went wrong</SectionTitle>
-          <div className="mt-8 space-y-8">
-            {project.challenges.map(c => (
-              <Topic key={c.title} {...c} fallback="alert" mentions={mentions} />
-            ))}
-          </div>
-        </div>
-      </section>
+      {(project.decisions.length > 0 || project.challenges.length > 0) && (
+        <section className="mt-28 grid gap-16 md:grid-cols-2">
+          {project.decisions.length > 0 && (
+            <div>
+              <SectionTitle>Decisions</SectionTitle>
+              <div className="mt-8 space-y-8">
+                {project.decisions.map(d => (
+                  <Topic key={d.title} {...d} fallback="check" mentions={mentions} />
+                ))}
+              </div>
+            </div>
+          )}
+          {project.challenges.length > 0 && (
+            <div>
+              <SectionTitle>What went wrong</SectionTitle>
+              <div className="mt-8 space-y-8">
+                {project.challenges.map(c => (
+                  <Topic key={c.title} {...c} fallback="alert" mentions={mentions} />
+                ))}
+              </div>
+            </div>
+          )}
+        </section>
+      )}
 
       <section className="mt-28">
         <SectionTitle>Stack</SectionTitle>
@@ -215,31 +225,33 @@ export default function Project() {
       {gallery.length > 0 && (
         <section className="mt-28 grid gap-6 md:grid-cols-2">
           {gallery.map(img => (
-            <ProjectImage
-              key={img.caption}
-              name={project.name}
-              caption={img.caption}
-              hue={project.hue}
-              className="aspect-[4/3]"
-            />
+            <ProjectImage key={img.caption} image={img} className="aspect-[16/9]" />
           ))}
         </section>
       )}
 
-      <div className="mt-16 flex flex-wrap gap-3">
-        <span
-          className="cursor-not-allowed rounded-full border border-ink/15 px-5 py-2.5 text-ink/50"
-          title="Coming soon"
-        >
-          Live demo (coming soon)
-        </span>
-        <span
-          className="cursor-not-allowed rounded-full border border-ink/15 px-5 py-2.5 text-ink/50"
-          title="Coming soon"
-        >
-          Source code (coming soon)
-        </span>
-      </div>
+      {(project.live || project.source) && (
+        <div className="mt-16 flex flex-wrap gap-3">
+          {[
+            { href: project.live, label: 'Live site' },
+            { href: project.source, label: 'Source code' },
+          ].map(
+            link =>
+              link.href && (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-full border border-ink/15 px-5 py-2.5 transition-colors hover:border-ink/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-haze"
+                >
+                  {link.label}
+                  <span className="sr-only"> (opens in a new tab)</span>
+                </a>
+              )
+          )}
+        </div>
+      )}
 
       <nav aria-label="More projects" className="mt-28 grid gap-6 border-t border-ink/10 pt-10 sm:grid-cols-2">
         <Link to={`/work/${prev.slug}`} viewTransition className="group/btn">
